@@ -1,6 +1,7 @@
 import {useState} from 'react'
 
 import GuessInputBox from './components/GuessInputBox'
+import CorrectIncorrectMessage from './components/CorrectIncorrectMessage'
 
 const App = () => {
   const GameState = {
@@ -19,7 +20,7 @@ const makeGuess = (event) => {
     setCurrentGameState(GameState.Correct)
   else {
     setCurrentGameState(GameState.Incorrect)
-    setTimeout(() => setCurrentGameState(GameState.Guessing), '25000')
+    setTimeout(() => setCurrentGameState(GameState.Guessing), 2500)
   }
 
   setGuess('')
@@ -27,7 +28,8 @@ const makeGuess = (event) => {
 
   return (
     <>
-      <GuessInputBox guess={guess} setGuess={setGuess} makeGuess={makeGuess}/>
+      <GuessInputBox guess={guess} setGuess={setGuess} makeGuess={makeGuess} />
+      <CorrectIncorrectMessage GameState={GameState} currentGameState={currentGameState} />
     </>
   )
 }
