@@ -1,11 +1,13 @@
-const GuessInputBox = ({guess, setGuess, makeGuess}) => {
+const GuessInputBox = ({guess, updateGuess, makeGuess}) => {
+  let buttonDisabled = !(guess.length === 5)
+
   return(
     <form onSubmit={makeGuess}>
       <input
         value={guess}
-        onChange={(event) => setGuess(event.target.value)}
+        onChange={updateGuess}
       />
-      <button type='submit'>Make Guess</button>
+      <button type='submit' disabled={buttonDisabled}>Make Guess</button>
     </form>
   )
 }
