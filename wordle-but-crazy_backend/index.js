@@ -2,6 +2,9 @@ const express = require('express')
 const app = express()
 app.use(express.json())
 
+const cors = require('cors')
+app.use(cors())
+
 const Colour = {
   Grey: 'Grey',
   Yellow: 'Yellow',
@@ -18,12 +21,14 @@ app.post('/api/makeguess', (req, res) => {
   let newPastGuess = {
     number: guesses,
     word: guess,
-    colours: new Array(5).fill(Colour.Grey)
+    colours: new Array(5).fill(Colour.Grey),
+    correct: false
   }
 
-  if (guess === targetWord)
+  if (guess === targetWord) {
     newPastGuess.colours = new Array(5).fill(Colour.Green)
-  else {
+    newPastGuess.correct = true
+  } else {
     for (let i = 0; i < 5; i++) {
       const targetChar = targetWord.charAt(i)
 

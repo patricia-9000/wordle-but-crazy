@@ -1,4 +1,5 @@
 import {useState} from 'react'
+import axios from 'axios'
 
 import PastGuessesList from './components/guesslist/PastGuessesList'
 import GuessInputBox from './components/GuessInputBox'
@@ -20,7 +21,6 @@ const App = () => {
 const [guess, setGuess] = useState('')
 const [currentGameState, setCurrentGameState] = useState(GameState.Guessing)
 const [pastGuesses, setPastGuesses] = useState([])
-const [guessNumber, setGuessNumber] = useState(1)
 
 const updateGuess = (event) => {
   const newGuess = event.target.value
@@ -31,36 +31,23 @@ const updateGuess = (event) => {
 
 const makeGuess = (event) => {
   event.preventDefault()
-  let newGuess = guess.toLowerCase()
-  let newPastGuess = {
-    number: guessNumber,
-    word: newGuess,
-    colours: new Array(5).fill(Colour.Grey, 0, 5)
-  }
+  let newGuess = {word: guess.toLowerCase()}
+  let newPastGuess = null
+  
+  axios
+    .post('http://localhost:3001/api/makeguess', newGuess)
+    .then(res => {
+      newPastGuess = res.data
 
-  setGuessNumber(guessNumber + 1)
+      if (newPastGuess.correct)
+        setCurrentGameState(GameState.Correct)
+      else
+        setCurrentGameState(GameState.Incorrect)
 
-  const targetWord = 'horse'
-
-  if (newGuess === targetWord) {
-    setCurrentGameState(GameState.Correct)
-    newPastGuess.colours = new Array(5).fill(Colour.Green)
-  } else {
-    setCurrentGameState(GameState.Incorrect)
-
-    for (let i = 0; i < 5; i++) {
-      const targetChar = targetWord.charAt(i)
-
-      if (newGuess.charAt(i) === targetChar)
-        newPastGuess.colours[i] = Colour.Green
-      else if (newGuess.includes(targetChar))
-        newPastGuess.colours[newGuess.indexOf(targetChar)] = Colour.Yellow
-    }
-  }
-
-  setTimeout(() => setCurrentGameState(GameState.Guessing), 2500)
-  setPastGuesses(pastGuesses.concat(newPastGuess))
-  setGuess('')
+      setTimeout(() => setCurrentGameState(GameState.Guessing), 2500)
+      setPastGuesses(pastGuesses.concat(newPastGuess))
+      setGuess('')
+    })
 }
 
   return (
