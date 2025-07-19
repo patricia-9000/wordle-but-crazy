@@ -10,8 +10,15 @@ const App = () => {
     Correct: 'Correct'
   }
 
+  const Colour = {
+    Grey: 'Grey',
+    Yellow: 'Yellow',
+    Green: 'Green'
+  }
+
 const [guess, setGuess] = useState('')
 const [currentGameState, setCurrentGameState] = useState(GameState.Guessing)
+const [pastGuesses, setPastGuesses] = useState([])
 
 const updateGuess = (event) => {
   const newGuess = event.target.value
@@ -23,13 +30,31 @@ const updateGuess = (event) => {
 const makeGuess = (event) => {
   event.preventDefault()
   let newGuess = guess.toLowerCase()
+  let newPastGuess = {
+    word: newGuess,
+    colours: new Array(5).fill(Colour.Grey, 0, 5)
+  }
 
-  if (newGuess === 'horse')
+  const targetWord = 'horse'
+
+  if (newGuess === targetWord) {
     setCurrentGameState(GameState.Correct)
-  else
+    newPastGuess.colours = new Array(5).fill(Colour.Green)
+  } else {
     setCurrentGameState(GameState.Incorrect)
 
+    for (let i = 0; i < 5; i++) {
+      const targetChar = targetWord.charAt(i)
+
+      if (newGuess.charAt(i) === targetChar)
+        newPastGuess.colours[i] = Colour.Green
+      else if (newGuess.includes(targetChar))
+        newPastGuess.colours[newGuess.indexOf(targetChar)] = Colour.Yellow
+    }
+  }
+
   setTimeout(() => setCurrentGameState(GameState.Guessing), 2500)
+  setPastGuesses(pastGuesses.concat(newPastGuess))
   setGuess('')
 }
 
