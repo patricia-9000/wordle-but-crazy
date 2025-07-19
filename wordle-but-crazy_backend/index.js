@@ -5,6 +5,10 @@ app.use(express.json())
 const cors = require('cors')
 app.use(cors())
 
+const nthline = require('nthline')
+
+const FIVE_LETTER_WORDS = 3103
+
 const Colour = {
   Grey: 'Grey',
   Yellow: 'Yellow',
@@ -12,7 +16,11 @@ const Colour = {
 }
 
 let guesses = 0
-let targetWord = 'horse'
+
+const wordNumber = Math.floor(Math.random() * FIVE_LETTER_WORDS)
+let targetWord = ''
+nthline(wordNumber, './WORDS')
+  .then(word => targetWord = word)
 
 app.post('/api/makeguess', (req, res) => {
   const guess = req.body.word
