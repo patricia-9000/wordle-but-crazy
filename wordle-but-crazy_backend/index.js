@@ -15,12 +15,23 @@ const Colour = {
   Green: 'Green'
 }
 
+function chooseWord() {
+  const wordNumber = Math.floor(Math.random() * FIVE_LETTER_WORDS)
+  nthline(wordNumber, './WORDS')
+    .then(word => {
+      targetWord = word
+      console.log(`New target word: ${word}`)
+    })
+}
+
+let targetWord = chooseWord()
 let guesses = 0
 
-const wordNumber = Math.floor(Math.random() * FIVE_LETTER_WORDS)
-let targetWord = ''
-nthline(wordNumber, './WORDS')
-  .then(word => targetWord = word)
+app.get('/api/reset', (req, res) => {
+  targetWord = chooseWord()
+  guesses = 0
+  res.status(200).end()
+})
 
 app.post('/api/makeguess', (req, res) => {
   const guess = req.body.word
@@ -36,6 +47,8 @@ app.post('/api/makeguess', (req, res) => {
   if (guess === targetWord) {
     newPastGuess.colours = new Array(5).fill(Colour.Green)
     newPastGuess.correct = true
+    targetWord = chooseWord()
+    guesses = 0
   } else {
     for (let i = 0; i < 5; i++) {
       const targetChar = targetWord.charAt(i)

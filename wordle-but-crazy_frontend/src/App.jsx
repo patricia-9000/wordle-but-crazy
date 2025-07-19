@@ -1,4 +1,4 @@
-import {useState} from 'react'
+import {useState, useEffect} from 'react'
 import axios from 'axios'
 
 import PastGuessesList from './components/guesslist/PastGuessesList'
@@ -39,16 +39,27 @@ const makeGuess = (event) => {
     .then(res => {
       newPastGuess = res.data
 
-      if (newPastGuess.correct)
+      if (newPastGuess.correct) {
         setCurrentGameState(GameState.Correct)
-      else
+        setTimeout(() => {
+          setCurrentGameState(GameState.Guessing)
+          setPastGuesses([])
+        }, 2500)
+      } else {
         setCurrentGameState(GameState.Incorrect)
+        setTimeout(() => setCurrentGameState(GameState.Guessing), 2500)
+      }
 
-      setTimeout(() => setCurrentGameState(GameState.Guessing), 2500)
       setPastGuesses(pastGuesses.concat(newPastGuess))
       setGuess('')
     })
 }
+
+useEffect(() => {
+  axios
+    .get('http://localhost:3001/api/reset')
+    .then(res => {})
+}, [])
 
   return (
     <>
