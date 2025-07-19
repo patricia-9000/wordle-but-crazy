@@ -1,5 +1,6 @@
 import {useState} from 'react'
 
+import PastGuessesList from './components/guesslist/PastGuessesList'
 import GuessInputBox from './components/GuessInputBox'
 import CorrectIncorrectMessage from './components/CorrectIncorrectMessage'
 
@@ -19,6 +20,7 @@ const App = () => {
 const [guess, setGuess] = useState('')
 const [currentGameState, setCurrentGameState] = useState(GameState.Guessing)
 const [pastGuesses, setPastGuesses] = useState([])
+const [guessNumber, setGuessNumber] = useState(1)
 
 const updateGuess = (event) => {
   const newGuess = event.target.value
@@ -31,9 +33,12 @@ const makeGuess = (event) => {
   event.preventDefault()
   let newGuess = guess.toLowerCase()
   let newPastGuess = {
+    number: guessNumber,
     word: newGuess,
     colours: new Array(5).fill(Colour.Grey, 0, 5)
   }
+
+  setGuessNumber(guessNumber + 1)
 
   const targetWord = 'horse'
 
@@ -60,6 +65,7 @@ const makeGuess = (event) => {
 
   return (
     <>
+      <PastGuessesList pastGuesses={pastGuesses} Colour={Colour}/>
       <GuessInputBox guess={guess} updateGuess={updateGuess} makeGuess={makeGuess} />
       <CorrectIncorrectMessage GameState={GameState} currentGameState={currentGameState} />
     </>
