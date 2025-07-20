@@ -84,13 +84,21 @@ const App = () => {
     newGame()
   }, [])
 
+  //App CSS
+  const style = {
+    width: 'max-content',
+    margin: 'auto',
+    marginTop: '300px',
+    textAlign: 'center'
+  }
+
   //Render app
   return (
-    <>
+    <div style={style}>
       <PastGuessesList pastGuesses={pastGuesses} Colour={Colour}/>
       <GuessInputBox guess={guess} updateGuess={updateGuess} makeGuess={makeGuess} guessingDisabled={guessingDisabled}/>
       <StatusMessageLabel statusMessage={statusMessage}/>
-    </>
+    </div>
   )
 }
 
