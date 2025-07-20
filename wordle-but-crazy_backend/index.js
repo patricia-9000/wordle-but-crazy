@@ -81,7 +81,6 @@ app.post('/api/makeguess', (req, res) => {
         })
       //Proceed if word is recognised
       } else {
-        currentGame.guesses++
         const targetWord = currentGame.targetWord
 
         let newPastGuess = {
@@ -90,6 +89,8 @@ app.post('/api/makeguess', (req, res) => {
           colours: new Array(5).fill(Colour.Grey),
           correct: false
         }
+
+        currentGame.guesses++
 
         //Whole word is correct
         if (guess === targetWord) {
