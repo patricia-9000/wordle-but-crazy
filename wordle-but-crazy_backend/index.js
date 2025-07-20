@@ -36,6 +36,13 @@ app.get('/api/newgame', (req, res) => {
 
       activeGames.push(newGame)
       console.log(JSON.stringify(activeGames))
+
+      //Delete this game after 15 minutes
+      setTimeout(() => {
+        activeGames = activeGames.filter(g => g.id !== newGame.id)
+        console.log(JSON.stringify(activeGames))
+      }, 900000)
+
       res.json({
         id: newGame.id
       })
