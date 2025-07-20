@@ -18,53 +18,62 @@ const App = () => {
     Green: 'Green'
   }
 
-const [guess, setGuess] = useState('')
-const [currentGameState, setCurrentGameState] = useState(GameState.Guessing)
-const [pastGuesses, setPastGuesses] = useState([])
+  const [guess, setGuess] = useState('')
+  const [currentGameState, setCurrentGameState] = useState(GameState.Guessing)
+  const [pastGuesses, setPastGuesses] = useState([])
 
-const updateGuess = (event) => {
-  const newGuess = event.target.value
+  //Update word written in guess text box
+  const updateGuess = (event) => {
+    const newGuess = event.target.value
 
-  if (newGuess.length < 6 && !/[^a-zA-Z]/.test(newGuess))
-    setGuess(newGuess)
-}
+    //Prevent words longer than 5 letters and prevent non-letter characters
+    if (newGuess.length < 6 && !/[^a-zA-Z]/.test(newGuess))
+      setGuess(newGuess)
+  }
 
-const makeGuess = (event) => {
-  event.preventDefault()
-  let newGuess = {word: guess.toLowerCase()}
-  let newPastGuess = null
-  
-  axios
-    .post('http://localhost:3001/api/makeguess', newGuess)
-    .then(res => {
-      newPastGuess = res.data
-
-      if (newPastGuess.error) {
-        console.log(newPastGuess.error)
-      } else {
-        if (newPastGuess.correct) {
-          setCurrentGameState(GameState.Correct)
-          setTimeout(() => {
-            setCurrentGameState(GameState.Guessing)
-            setPastGuesses([])
-          }, 2500)
+  //Submit guesses to backend when 'make guess' button clicked
+  const makeGuess = (event) => {
+    event.preventDefault()
+    let newGuess = {word: guess.toLowerCase()}
+    let newPastGuess = null
+    
+    axios
+      .post('http://localhost:3001/api/makeguess', newGuess)
+      .then(res => {
+        newPastGuess = res.data
+        
+        //Backend says guess contains an error
+        if (newPastGuess.error) {
+          console.log(newPastGuess.error)
+        //Backend says guess is okay
         } else {
-          setCurrentGameState(GameState.Incorrect)
-          setTimeout(() => setCurrentGameState(GameState.Guessing), 2500)
+          //Guessed word is correct
+          if (newPastGuess.correct) {
+            setCurrentGameState(GameState.Correct)
+            setTimeout(() => {
+              setCurrentGameState(GameState.Guessing)
+              setPastGuesses([])
+            }, 2500)
+          //Guessed word is incorrect
+          } else {
+            setCurrentGameState(GameState.Incorrect)
+            setTimeout(() => setCurrentGameState(GameState.Guessing), 2500)
+          }
+
+          setPastGuesses(pastGuesses.concat(newPastGuess))
+          setGuess('')
         }
+      })
+  }
 
-        setPastGuesses(pastGuesses.concat(newPastGuess))
-        setGuess('')
-      }
-    })
-}
+  //Reset game immediately after initial render of app
+  useEffect(() => {
+    axios
+      .get('http://localhost:3001/api/reset')
+      .then(res => {})
+  }, [])
 
-useEffect(() => {
-  axios
-    .get('http://localhost:3001/api/reset')
-    .then(res => {})
-}, [])
-
+  //Render app
   return (
     <>
       <PastGuessesList pastGuesses={pastGuesses} Colour={Colour}/>
