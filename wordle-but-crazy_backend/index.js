@@ -17,6 +17,7 @@ const Colour = {
   Green: 'Green'
 }
 
+//Choose new random target word
 function chooseWord() {
   const wordNumber = Math.floor(Math.random() * FIVE_LETTER_WORDS)
   nthline(wordNumber, WORDS_FILEPATH)
@@ -29,15 +30,18 @@ function chooseWord() {
 let targetWord = chooseWord()
 let guesses = 0
 
+//Reset game
 app.get('/api/reset', (req, res) => {
   targetWord = chooseWord()
   guesses = 0
   res.status(200).end()
 })
 
+//Handle incoming guessed word
 app.post('/api/makeguess', (req, res) => {
   const guess = req.body.word
 
+  //Check if the guess is a real word
   const fileStream = fs.createReadStream(WORDS_FILEPATH)
   let matchedRealWord = false
 
@@ -47,10 +51,12 @@ app.post('/api/makeguess', (req, res) => {
   })
 
   fileStream.on('close', () => {
+    //Return error message if guess isn't recognised as a word
     if (!matchedRealWord) {
       res.json({
         error: `${guess} is not recognised as a word`
       })
+    //Proceed with generating clues if word is recognised
     } else {
       guesses++
 
@@ -61,17 +67,21 @@ app.post('/api/makeguess', (req, res) => {
         correct: false
       }
 
+      //Whole word is correct
       if (guess === targetWord) {
         newPastGuess.colours = new Array(5).fill(Colour.Green)
         newPastGuess.correct = true
         targetWord = chooseWord()
         guesses = 0
+      //Whole word is not correct
       } else {
         for (let i = 0; i < 5; i++) {
           const targetChar = targetWord.charAt(i)
 
+          //Right letter, right position
           if (guess.charAt(i) === targetChar)
             newPastGuess.colours[i] = Colour.Green
+          //Right letter, wrong position
           else if (guess.includes(targetChar))
             newPastGuess.colours[guess.indexOf(targetChar)] = Colour.Yellow
         }
