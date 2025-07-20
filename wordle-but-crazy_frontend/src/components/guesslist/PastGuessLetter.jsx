@@ -22,10 +22,9 @@ const PastGuessLetter = ({letter, thisColour, Colour}) => {
       break;
   }
 
-  if (letter === '.') {
-    letter = ''
+  if (letter === ' ')
     style.backgroundColor = 'white'
-  } else
+  else
     letter = letter.toUpperCase()
 
   return(

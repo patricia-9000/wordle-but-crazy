@@ -1,8 +1,7 @@
-import {useState, useEffect} from 'react'
+import {useState, useEffect, useRef, useCallback} from 'react'
 import axios from 'axios'
 
 import PastGuessesList from './components/guesslist/PastGuessesList'
-import GuessInputBox from './components/GuessInputBox'
 import StatusMessageLabel from './components/StatusMessageLabel'
 
 const App = () => {
@@ -13,10 +12,24 @@ const App = () => {
   }
 
   const [gameId, setGameId] = useState(null)
+  const gameIdRef = useRef({})
+  gameIdRef.current = gameId
+
   const [guess, setGuess] = useState('')
-  const [statusMessage, setStatusMessage] = useState('')
+  const guessRef = useRef({})
+  guessRef.current = guess
+
   const [pastGuesses, setPastGuesses] = useState([])
+  const pastGuessesRef = useRef({})
+  pastGuessesRef.current = pastGuesses
+
   const [guessingDisabled, setGuessingDisabled] = useState(false)
+  const guessingDisabledRef = useRef({})
+  guessingDisabledRef.current = guessingDisabled
+
+  const [statusMessage, setStatusMessage] = useState('')
+  const statusMessageRef = useRef({})
+  statusMessageRef.current = statusMessage
 
   //Reset past guesses array and request new game from backend
   const newGame = () => {
@@ -25,7 +38,7 @@ const App = () => {
     for (let i = 0; i < 6; i++) {
       blankGuesses.push({
         number: i,
-        word: '.....',
+        word: '     ',
         colours: new Array(5).fill(Colour.Grey),
         correct: false
       })
@@ -40,22 +53,11 @@ const App = () => {
       })
   }
 
-  //Update word written in guess text box
-  const updateGuess = (event) => {
-    const newGuess = event.target.value
-
-    //Prevent words longer than 5 letters and prevent non-letter characters
-    if (newGuess.length < 6 && !/[^a-zA-Z]/.test(newGuess))
-      setGuess(newGuess)
-  }
-
   //Submit guesses to backend when 'make guess' button clicked
-  const makeGuess = (event) => {
-    event.preventDefault()
-
+  const makeGuess = () => {
     let newGuess = {
-      id: gameId,
-      word: guess.toLowerCase()
+      id: gameIdRef.current,
+      word: guessRef.current.toLowerCase()
     }
 
     let newPastGuess = null
@@ -68,18 +70,18 @@ const App = () => {
         //Backend says guess contains an error
         if (newPastGuess.error) {
           setStatusMessage(newPastGuess.error)
-          setTimeout(() => setStatusMessage(''), 5000)
+          setTimeout(() => {
+            setStatusMessage('')
+            setGuess('')
+          }, 5000)
         //Backend says guess is okay
         } else {
           //Guessed word is correct
           if (newPastGuess.correct) {
             setGuessingDisabled(true)
-            setStatusMessage('Correct!')
 
             setTimeout(() => {
               setGuessingDisabled(false)
-              setStatusMessage('')
-              setPastGuesses([])
 
               //Start new game
               newGame()
@@ -87,15 +89,47 @@ const App = () => {
           }
 
           //Update past guesses
-          let guesses = newPastGuess.number
-          let newPastGuesses = pastGuesses
-          newPastGuesses[guesses] = newPastGuess
+          let newPastGuesses = pastGuessesRef.current
+          let guessIndex = newPastGuess.number
+          newPastGuesses[guessIndex] = newPastGuess
           setPastGuesses(newPastGuesses)
 
           setGuess('')
         }
       })
   }
+
+  //Handle key presses
+  const keyPressed = useCallback((event) => {
+    const key = event.key
+
+    if (key === 'Enter') {
+      if (guessRef.current.length === 5) {
+        setStatusMessage('')
+        makeGuess()
+      }
+    } else if (key === 'Backspace') {
+      const newGuess = guessRef.current.substring(0, guessRef.current.length - 1)
+      setGuess(newGuess)
+      setStatusMessage(newGuess)
+    } else if (!guessingDisabledRef.current 
+            && key.length === 1 
+            && /^[a-zA-Z]/.test(key) 
+            && guessRef.current.length < 5) {
+      const newGuess = guessRef.current + key
+      setGuess(newGuess)
+      setStatusMessage(newGuess)
+    }
+  }, [])
+
+  //Detect key presses on the page
+  useEffect(() => {
+    document.addEventListener('keydown', keyPressed, false)
+
+    return () => {
+      document.removeEventListener('keydown', keyPressed, false)
+    }
+  }, [keyPressed])
 
   //Start game immediately after initial render of app
   useEffect(() => {
@@ -106,7 +140,7 @@ const App = () => {
   const style = {
     width: 'max-content',
     margin: 'auto',
-    marginTop: '300px',
+    marginTop: '250px',
     textAlign: 'center',
     fontFamily: 'sans-serif'
   }
@@ -115,7 +149,6 @@ const App = () => {
   return (
     <div style={style}>
       <PastGuessesList pastGuesses={pastGuesses} Colour={Colour}/>
-      <GuessInputBox guess={guess} updateGuess={updateGuess} makeGuess={makeGuess} guessingDisabled={guessingDisabled}/>
       <StatusMessageLabel statusMessage={statusMessage}/>
     </div>
   )
