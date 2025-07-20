@@ -107,7 +107,8 @@ const App = () => {
     width: 'max-content',
     margin: 'auto',
     marginTop: '300px',
-    textAlign: 'center'
+    textAlign: 'center',
+    fontFamily: 'sans-serif'
   }
 
   //Render app
