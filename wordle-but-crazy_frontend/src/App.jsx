@@ -18,8 +18,21 @@ const App = () => {
   const [pastGuesses, setPastGuesses] = useState([])
   const [guessingDisabled, setGuessingDisabled] = useState(false)
 
-  //Ask backend to start a new game
+  //Reset past guesses array and request new game from backend
   const newGame = () => {
+    let blankGuesses = []
+
+    for (let i = 0; i < 6; i++) {
+      blankGuesses.push({
+        number: i,
+        word: '.....',
+        colours: new Array(5).fill(Colour.Grey),
+        correct: false
+      })
+    }
+
+    setPastGuesses(blankGuesses)
+
     axios
       .get('http://localhost:3001/api/newgame')
       .then(res => {
@@ -73,13 +86,18 @@ const App = () => {
             }, 2500)
           }
 
-          setPastGuesses(pastGuesses.concat(newPastGuess))
+          //Update past guesses
+          let guesses = newPastGuess.number
+          let newPastGuesses = pastGuesses
+          newPastGuesses[guesses] = newPastGuess
+          setPastGuesses(newPastGuesses)
+
           setGuess('')
         }
       })
   }
 
-  //Start new game immediately after initial render of app
+  //Start game immediately after initial render of app
   useEffect(() => {
     newGame()
   }, [])
