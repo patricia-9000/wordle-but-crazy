@@ -39,19 +39,23 @@ const makeGuess = (event) => {
     .then(res => {
       newPastGuess = res.data
 
-      if (newPastGuess.correct) {
-        setCurrentGameState(GameState.Correct)
-        setTimeout(() => {
-          setCurrentGameState(GameState.Guessing)
-          setPastGuesses([])
-        }, 2500)
+      if (newPastGuess.error) {
+        console.log(newPastGuess.error)
       } else {
-        setCurrentGameState(GameState.Incorrect)
-        setTimeout(() => setCurrentGameState(GameState.Guessing), 2500)
-      }
+        if (newPastGuess.correct) {
+          setCurrentGameState(GameState.Correct)
+          setTimeout(() => {
+            setCurrentGameState(GameState.Guessing)
+            setPastGuesses([])
+          }, 2500)
+        } else {
+          setCurrentGameState(GameState.Incorrect)
+          setTimeout(() => setCurrentGameState(GameState.Guessing), 2500)
+        }
 
-      setPastGuesses(pastGuesses.concat(newPastGuess))
-      setGuess('')
+        setPastGuesses(pastGuesses.concat(newPastGuess))
+        setGuess('')
+      }
     })
 }
 

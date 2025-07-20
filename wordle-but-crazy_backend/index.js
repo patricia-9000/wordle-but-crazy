@@ -5,9 +5,11 @@ app.use(express.json())
 const cors = require('cors')
 app.use(cors())
 
+const fs = require('fs')
 const nthline = require('nthline')
 
 const FIVE_LETTER_WORDS = 3103
+const WORDS_FILEPATH = './WORDS'
 
 const Colour = {
   Grey: 'Grey',
@@ -17,7 +19,7 @@ const Colour = {
 
 function chooseWord() {
   const wordNumber = Math.floor(Math.random() * FIVE_LETTER_WORDS)
-  nthline(wordNumber, './WORDS')
+  nthline(wordNumber, WORDS_FILEPATH)
     .then(word => {
       targetWord = word
       console.log(`New target word: ${word}`)
@@ -35,32 +37,49 @@ app.get('/api/reset', (req, res) => {
 
 app.post('/api/makeguess', (req, res) => {
   const guess = req.body.word
-  guesses ++
 
-  let newPastGuess = {
-    number: guesses,
-    word: guess,
-    colours: new Array(5).fill(Colour.Grey),
-    correct: false
-  }
+  const fileStream = fs.createReadStream(WORDS_FILEPATH)
+  let matchedRealWord = false
 
-  if (guess === targetWord) {
-    newPastGuess.colours = new Array(5).fill(Colour.Green)
-    newPastGuess.correct = true
-    targetWord = chooseWord()
-    guesses = 0
-  } else {
-    for (let i = 0; i < 5; i++) {
-      const targetChar = targetWord.charAt(i)
+  fileStream.on('data', d => {
+    if (!matchedRealWord)
+      matchedRealWord = d.toString().includes(guess)
+  })
 
-      if (guess.charAt(i) === targetChar)
-        newPastGuess.colours[i] = Colour.Green
-      else if (guess.includes(targetChar))
-        newPastGuess.colours[guess.indexOf(targetChar)] = Colour.Yellow
+  fileStream.on('close', () => {
+    if (!matchedRealWord) {
+      res.json({
+        error: `${guess} is not recognised as a word`
+      })
+    } else {
+      guesses++
+
+      let newPastGuess = {
+        number: guesses,
+        word: guess,
+        colours: new Array(5).fill(Colour.Grey),
+        correct: false
+      }
+
+      if (guess === targetWord) {
+        newPastGuess.colours = new Array(5).fill(Colour.Green)
+        newPastGuess.correct = true
+        targetWord = chooseWord()
+        guesses = 0
+      } else {
+        for (let i = 0; i < 5; i++) {
+          const targetChar = targetWord.charAt(i)
+
+          if (guess.charAt(i) === targetChar)
+            newPastGuess.colours[i] = Colour.Green
+          else if (guess.includes(targetChar))
+            newPastGuess.colours[guess.indexOf(targetChar)] = Colour.Yellow
+        }
+      }
+
+      res.json(newPastGuess)
     }
-  }
-
-  res.json(newPastGuess)
+  })
 })
 
 const PORT = 3001
