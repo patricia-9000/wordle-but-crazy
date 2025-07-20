@@ -51,63 +51,71 @@ app.get('/api/newgame', (req, res) => {
 
 //Handle incoming guessed word
 app.post('/api/makeguess', (req, res) => {
-  const guess = req.body.word
+  //Find client's game using their game ID
+  const id = req.body.id
+  const currentGame = activeGames.find(g => g.id === id)
 
-  //Check if the guess is a real word
-  const fileStream = fs.createReadStream(WORDS_FILEPATH)
-  let matchedRealWord = false
+  //Return error message if game can't be found
+  if (!currentGame) {
+    res.json({
+      error: 'Session could not be found and may have timed out - please refresh'
+    })
+  //Proceed if game is found
+  } else {
+    const guess = req.body.word
 
-  fileStream.on('data', d => {
-    if (!matchedRealWord)
-      matchedRealWord = d.toString().includes(guess)
-  })
+    //Check if the guess is a real word
+    const fileStream = fs.createReadStream(WORDS_FILEPATH)
+    let matchedRealWord = false
 
-  fileStream.on('close', () => {
-    //Return error message if guess isn't recognised as a word
-    if (!matchedRealWord) {
-      res.json({
-        error: `${guess} is not recognised as a word`
-      })
-    //Proceed with generating clues if word is recognised
-    } else {
-      //Find client's game using their game ID
-      const id = req.body.id
-      const currentGame = activeGames.find(g => g.id === id)
+    fileStream.on('data', d => {
+      if (!matchedRealWord)
+        matchedRealWord = d.toString().includes(guess)
+    })
 
-      currentGame.guesses ++
-      const targetWord = currentGame.targetWord
-
-      let newPastGuess = {
-        number: currentGame.guesses,
-        word: guess,
-        colours: new Array(5).fill(Colour.Grey),
-        correct: false
-      }
-
-      //Whole word is correct
-      if (guess === targetWord) {
-        newPastGuess.colours = new Array(5).fill(Colour.Green)
-        newPastGuess.correct = true
-
-        //End current game
-        activeGames = activeGames.filter(g => g.id !== id)
-      //Whole word is not correct
+    fileStream.on('close', () => {
+      //Return error message if guess isn't recognised as a word
+      if (!matchedRealWord) {
+        res.json({
+          error: `${guess} is not recognised as a word`
+        })
+      //Proceed if word is recognised
       } else {
-        for (let i = 0; i < 5; i++) {
-          const targetChar = targetWord.charAt(i)
+        currentGame.guesses++
+        const targetWord = currentGame.targetWord
 
-          //Right letter, right position
-          if (guess.charAt(i) === targetChar)
-            newPastGuess.colours[i] = Colour.Green
-          //Right letter, wrong position
-          else if (guess.includes(targetChar))
-            newPastGuess.colours[guess.indexOf(targetChar)] = Colour.Yellow
+        let newPastGuess = {
+          number: currentGame.guesses,
+          word: guess,
+          colours: new Array(5).fill(Colour.Grey),
+          correct: false
         }
-      }
 
-      res.json(newPastGuess)
-    }
-  })
+        //Whole word is correct
+        if (guess === targetWord) {
+          newPastGuess.colours = new Array(5).fill(Colour.Green)
+          newPastGuess.correct = true
+
+          //End current game
+          activeGames = activeGames.filter(g => g.id !== id)
+        //Whole word is not correct
+        } else {
+          for (let i = 0; i < 5; i++) {
+            const targetChar = targetWord.charAt(i)
+
+            //Right letter, right position
+            if (guess.charAt(i) === targetChar)
+              newPastGuess.colours[i] = Colour.Green
+            //Right letter, wrong position
+            else if (guess.includes(targetChar))
+              newPastGuess.colours[guess.indexOf(targetChar)] = Colour.Yellow
+          }
+        }
+
+        res.json(newPastGuess)
+      }
+    })
+  }
 })
 
 const PORT = 3001

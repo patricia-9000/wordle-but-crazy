@@ -2,5 +2,6 @@ POST http://localhost:3001/api/makeguess
 content-type: application/json
 
 {
+  "id": 0,
   "word": "horse"
 }
