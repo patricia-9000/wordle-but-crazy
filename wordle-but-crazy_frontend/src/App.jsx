@@ -16,6 +16,7 @@ const App = () => {
   const [guess, setGuess] = useState('')
   const [statusMessage, setStatusMessage] = useState('')
   const [pastGuesses, setPastGuesses] = useState([])
+  const [guessingDisabled, setGuessingDisabled] = useState(false)
 
   //Ask backend to start a new game
   const newGame = () => {
@@ -54,23 +55,22 @@ const App = () => {
         //Backend says guess contains an error
         if (newPastGuess.error) {
           setStatusMessage(newPastGuess.error)
-          setTimeout(() => setStatusMessage(''), 2500)
+          setTimeout(() => setStatusMessage(''), 5000)
         //Backend says guess is okay
         } else {
           //Guessed word is correct
           if (newPastGuess.correct) {
+            setGuessingDisabled(true)
             setStatusMessage('Correct!')
+
             setTimeout(() => {
+              setGuessingDisabled(false)
               setStatusMessage('')
               setPastGuesses([])
 
               //Start new game
               newGame()
             }, 2500)
-          //Guessed word is incorrect
-          } else {
-            setStatusMessage('Incorrect')
-            setTimeout(() => setStatusMessage(''), 2500)
           }
 
           setPastGuesses(pastGuesses.concat(newPastGuess))
@@ -88,7 +88,7 @@ const App = () => {
   return (
     <>
       <PastGuessesList pastGuesses={pastGuesses} Colour={Colour}/>
-      <GuessInputBox guess={guess} updateGuess={updateGuess} makeGuess={makeGuess}/>
+      <GuessInputBox guess={guess} updateGuess={updateGuess} makeGuess={makeGuess} guessingDisabled={guessingDisabled}/>
       <StatusMessageLabel statusMessage={statusMessage}/>
     </>
   )
