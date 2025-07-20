@@ -3,15 +3,9 @@ import axios from 'axios'
 
 import PastGuessesList from './components/guesslist/PastGuessesList'
 import GuessInputBox from './components/GuessInputBox'
-import CorrectIncorrectMessage from './components/CorrectIncorrectMessage'
+import StatusMessageLabel from './components/StatusMessageLabel'
 
 const App = () => {
-  const GameState = {
-    Guessing: 'Guessing',
-    Incorrect: 'Incorrect',
-    Correct: 'Correct'
-  }
-
   const Colour = {
     Grey: 'Grey',
     Yellow: 'Yellow',
@@ -19,7 +13,7 @@ const App = () => {
   }
 
   const [guess, setGuess] = useState('')
-  const [currentGameState, setCurrentGameState] = useState(GameState.Guessing)
+  const [statusMessage, setStatusMessage] = useState('')
   const [pastGuesses, setPastGuesses] = useState([])
 
   //Update word written in guess text box
@@ -44,20 +38,21 @@ const App = () => {
         
         //Backend says guess contains an error
         if (newPastGuess.error) {
-          console.log(newPastGuess.error)
+          setStatusMessage(newPastGuess.error)
+          setTimeout(() => setStatusMessage(''), 2500)
         //Backend says guess is okay
         } else {
           //Guessed word is correct
           if (newPastGuess.correct) {
-            setCurrentGameState(GameState.Correct)
+            setStatusMessage('Correct!')
             setTimeout(() => {
-              setCurrentGameState(GameState.Guessing)
+              setStatusMessage('')
               setPastGuesses([])
             }, 2500)
           //Guessed word is incorrect
           } else {
-            setCurrentGameState(GameState.Incorrect)
-            setTimeout(() => setCurrentGameState(GameState.Guessing), 2500)
+            setStatusMessage('Incorrect')
+            setTimeout(() => setStatusMessage(''), 2500)
           }
 
           setPastGuesses(pastGuesses.concat(newPastGuess))
@@ -77,8 +72,8 @@ const App = () => {
   return (
     <>
       <PastGuessesList pastGuesses={pastGuesses} Colour={Colour}/>
-      <GuessInputBox guess={guess} updateGuess={updateGuess} makeGuess={makeGuess} />
-      <CorrectIncorrectMessage GameState={GameState} currentGameState={currentGameState} />
+      <GuessInputBox guess={guess} updateGuess={updateGuess} makeGuess={makeGuess}/>
+      <StatusMessageLabel statusMessage={statusMessage}/>
     </>
   )
 }
