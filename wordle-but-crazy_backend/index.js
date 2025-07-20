@@ -17,24 +17,29 @@ const Colour = {
   Green: 'Green'
 }
 
-//Choose new random target word
-function chooseWord() {
+//Array representing all currently active games being played by different clients
+let activeGames = []
+let maxId = 0
+
+//Start new game
+app.get('/api/newgame', (req, res) => {
+  //Choose new random target word
   const wordNumber = Math.floor(Math.random() * FIVE_LETTER_WORDS)
   nthline(wordNumber, WORDS_FILEPATH)
-    .then(word => {
-      targetWord = word
-      console.log(`New target word: ${word}`)
+    .then(randomWord => {
+      //Create new game
+      const newGame = {
+        id: maxId++,
+        targetWord: randomWord,
+        guesses: 0
+      }
+
+      activeGames.push(newGame)
+      console.log(JSON.stringify(activeGames))
+      res.json({
+        id: newGame.id
+      })
     })
-}
-
-let targetWord = chooseWord()
-let guesses = 0
-
-//Reset game
-app.get('/api/reset', (req, res) => {
-  targetWord = chooseWord()
-  guesses = 0
-  res.status(200).end()
 })
 
 //Handle incoming guessed word
@@ -58,10 +63,15 @@ app.post('/api/makeguess', (req, res) => {
       })
     //Proceed with generating clues if word is recognised
     } else {
-      guesses++
+      //Find client's game using their game ID
+      const id = req.body.id
+      const currentGame = activeGames.find(g => g.id === id)
+
+      currentGame.guesses ++
+      const targetWord = currentGame.targetWord
 
       let newPastGuess = {
-        number: guesses,
+        number: currentGame.guesses,
         word: guess,
         colours: new Array(5).fill(Colour.Grey),
         correct: false
@@ -71,8 +81,9 @@ app.post('/api/makeguess', (req, res) => {
       if (guess === targetWord) {
         newPastGuess.colours = new Array(5).fill(Colour.Green)
         newPastGuess.correct = true
-        targetWord = chooseWord()
-        guesses = 0
+
+        //End current game
+        activeGames = activeGames.filter(g => g.id !== id)
       //Whole word is not correct
       } else {
         for (let i = 0; i < 5; i++) {

@@ -12,9 +12,19 @@ const App = () => {
     Green: 'Green'
   }
 
+  const [gameId, setGameId] = useState(null)
   const [guess, setGuess] = useState('')
   const [statusMessage, setStatusMessage] = useState('')
   const [pastGuesses, setPastGuesses] = useState([])
+
+  //Ask backend to start a new game
+  const newGame = () => {
+    axios
+      .get('http://localhost:3001/api/newgame')
+      .then(res => {
+        setGameId(res.data.id)
+      })
+  }
 
   //Update word written in guess text box
   const updateGuess = (event) => {
@@ -28,7 +38,12 @@ const App = () => {
   //Submit guesses to backend when 'make guess' button clicked
   const makeGuess = (event) => {
     event.preventDefault()
-    let newGuess = {word: guess.toLowerCase()}
+
+    let newGuess = {
+      id: gameId,
+      word: guess.toLowerCase()
+    }
+
     let newPastGuess = null
     
     axios
@@ -48,6 +63,9 @@ const App = () => {
             setTimeout(() => {
               setStatusMessage('')
               setPastGuesses([])
+
+              //Start new game
+              newGame()
             }, 2500)
           //Guessed word is incorrect
           } else {
@@ -61,11 +79,9 @@ const App = () => {
       })
   }
 
-  //Reset game immediately after initial render of app
+  //Start new game immediately after initial render of app
   useEffect(() => {
-    axios
-      .get('http://localhost:3001/api/reset')
-      .then(res => {})
+    newGame()
   }, [])
 
   //Render app
