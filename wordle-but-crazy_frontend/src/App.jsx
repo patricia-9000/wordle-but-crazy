@@ -19,6 +19,10 @@ const App = () => {
   const guessRef = useRef({})
   guessRef.current = guess
 
+  const [guessIndex, setGuessIndex] = useState(0)
+  const guessIndexRef = useRef({})
+  guessIndexRef.current = guessIndex
+
   const [clues, setClues] = useState([])
   const cluesRef = useRef({})
   cluesRef.current = clues
@@ -45,6 +49,7 @@ const App = () => {
     }
 
     setClues(blankClues)
+    setGuessIndex(0)
 
     axios
       .get('http://localhost:3001/api/newgame')
@@ -76,6 +81,8 @@ const App = () => {
           }, 5000)
         //Backend says guess is okay
         } else {
+          setGuessIndex(guessIndexRef.current + 1)
+
           //Guessed word is correct
           if (newClue.correct) {
             setGuessingDisabled(true)
@@ -90,8 +97,7 @@ const App = () => {
 
           //Update clues
           let newClues = cluesRef.current
-          let guessIndex = newClue.number
-          newClues[guessIndex] = newClue
+          newClues[guessIndexRef.current] = newClue
           setClues(newClues)
 
           setGuess('')
@@ -101,24 +107,30 @@ const App = () => {
 
   //Handle key presses
   const keyPressed = useCallback((event) => {
-    const key = event.key
+    if (!guessingDisabledRef.current) {
+      const key = event.key
+      let newGuess = ''
 
-    if (key === 'Enter') {
-      if (guessRef.current.length === 5) {
-        setStatusMessage('')
-        makeGuess()
+      if (key === 'Enter') {
+        if (guessRef.current.length === 5)
+          makeGuess()
+      } else {
+        if (key === 'Backspace') {
+          newGuess = guessRef.current.substring(0, guessRef.current.length - 1)
+          setGuess(newGuess)
+        } else if (key.length === 1 
+                && /^[a-zA-Z]/.test(key) 
+                && guessRef.current.length < 5) {
+          newGuess = guessRef.current + key
+          setGuess(newGuess)
+        }
+
+        const displayedGuess = newGuess + ' '.repeat(5 - newGuess.length)
+        let newClues = cluesRef.current
+        newClues[guessIndexRef.current].word = displayedGuess
+        setClues(newClues)
+        console.log(cluesRef.current)
       }
-    } else if (key === 'Backspace') {
-      const newGuess = guessRef.current.substring(0, guessRef.current.length - 1)
-      setGuess(newGuess)
-      setStatusMessage(newGuess)
-    } else if (!guessingDisabledRef.current 
-            && key.length === 1 
-            && /^[a-zA-Z]/.test(key) 
-            && guessRef.current.length < 5) {
-      const newGuess = guessRef.current + key
-      setGuess(newGuess)
-      setStatusMessage(newGuess)
     }
   }, [])
 
