@@ -1,6 +1,6 @@
 import ClueWord from './ClueWord'
 
-const ClueList = ({clues, Colour}) => {
+const ClueList = ({clues, guessIndex, Colour}) => {
   const style = {
     margin: 'auto',
     borderCollapse: 'separate',
@@ -10,7 +10,7 @@ const ClueList = ({clues, Colour}) => {
   return(
     <table style={style}>
       <tbody>
-        {clues.map(clue => <ClueWord clue={clue} Colour={Colour} key={clue.number}/>)}
+        {clues.map(clue => <ClueWord clue={clue} guessIndex={guessIndex} Colour={Colour} key={clue.number}/>)}
       </tbody>
     </table>
   )

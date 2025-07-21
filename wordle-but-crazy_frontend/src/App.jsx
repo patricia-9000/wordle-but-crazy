@@ -159,7 +159,7 @@ const App = () => {
   //Render app
   return (
     <div style={style}>
-      <ClueList clues={clues} Colour={Colour}/>
+      <ClueList clues={clues} guessIndex={guessIndex} Colour={Colour}/>
       <StatusMessageLabel statusMessage={statusMessage}/>
     </div>
   )
