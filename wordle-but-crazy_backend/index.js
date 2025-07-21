@@ -103,13 +103,15 @@ app.post('/api/makeguess', (req, res) => {
         } else {
           for (let i = 0; i < 5; i++) {
             const targetChar = targetWord.charAt(i)
+            const guessedChar = guess.charAt(i)
 
             //Right letter, right position
-            if (guess.charAt(i) === targetChar)
+            if (guessedChar === targetChar)
               newClue.colours[i] = Colour.Green
             //Right letter, wrong position
-            else if (guess.includes(targetChar))
-              newClue.colours[guess.indexOf(targetChar)] = Colour.Yellow
+            else if (targetWord.includes(guessedChar)) {
+              newClue.colours[i] = Colour.Yellow
+            }
           }
         }
 
