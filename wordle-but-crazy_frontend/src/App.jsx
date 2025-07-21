@@ -129,7 +129,6 @@ const App = () => {
         let newClues = cluesRef.current
         newClues[guessIndexRef.current].word = displayedGuess
         setClues(newClues)
-        console.log(cluesRef.current)
       }
     }
   }, [])
