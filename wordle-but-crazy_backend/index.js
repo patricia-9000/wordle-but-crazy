@@ -83,7 +83,7 @@ app.post('/api/makeguess', (req, res) => {
       } else {
         const targetWord = currentGame.targetWord
 
-        let newPastGuess = {
+        let newClue = {
           number: currentGame.guesses,
           word: guess,
           colours: new Array(5).fill(Colour.Grey),
@@ -94,8 +94,8 @@ app.post('/api/makeguess', (req, res) => {
 
         //Whole word is correct
         if (guess === targetWord) {
-          newPastGuess.colours = new Array(5).fill(Colour.Green)
-          newPastGuess.correct = true
+          newClue.colours = new Array(5).fill(Colour.Green)
+          newClue.correct = true
 
           //End current game
           activeGames = activeGames.filter(g => g.id !== id)
@@ -106,14 +106,14 @@ app.post('/api/makeguess', (req, res) => {
 
             //Right letter, right position
             if (guess.charAt(i) === targetChar)
-              newPastGuess.colours[i] = Colour.Green
+              newClue.colours[i] = Colour.Green
             //Right letter, wrong position
             else if (guess.includes(targetChar))
-              newPastGuess.colours[guess.indexOf(targetChar)] = Colour.Yellow
+              newClue.colours[guess.indexOf(targetChar)] = Colour.Yellow
           }
         }
 
-        res.json(newPastGuess)
+        res.json(newClue)
       }
     })
   }

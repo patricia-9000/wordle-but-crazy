@@ -1,4 +1,4 @@
-const PastGuessLetter = ({letter, thisColour, Colour}) => {
+const ClueLetter = ({letter, thisColour, Colour}) => {
   let style = {
     width: '56px',
     height: '56px',
@@ -34,4 +34,4 @@ const PastGuessLetter = ({letter, thisColour, Colour}) => {
   )
 }
 
-export default PastGuessLetter
+export default ClueLetter

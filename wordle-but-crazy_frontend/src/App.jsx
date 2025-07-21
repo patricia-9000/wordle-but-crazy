@@ -1,7 +1,7 @@
 import {useState, useEffect, useRef, useCallback} from 'react'
 import axios from 'axios'
 
-import PastGuessesList from './components/guesslist/PastGuessesList'
+import ClueList from './components/cluelist/ClueList'
 import StatusMessageLabel from './components/StatusMessageLabel'
 
 const App = () => {
@@ -19,9 +19,9 @@ const App = () => {
   const guessRef = useRef({})
   guessRef.current = guess
 
-  const [pastGuesses, setPastGuesses] = useState([])
-  const pastGuessesRef = useRef({})
-  pastGuessesRef.current = pastGuesses
+  const [clues, setClues] = useState([])
+  const cluesRef = useRef({})
+  cluesRef.current = clues
 
   const [guessingDisabled, setGuessingDisabled] = useState(false)
   const guessingDisabledRef = useRef({})
@@ -31,12 +31,12 @@ const App = () => {
   const statusMessageRef = useRef({})
   statusMessageRef.current = statusMessage
 
-  //Reset past guesses array and request new game from backend
+  //Reset clues array and request new game from backend
   const newGame = () => {
-    let blankGuesses = []
+    let blankClues = []
 
     for (let i = 0; i < 6; i++) {
-      blankGuesses.push({
+      blankClues.push({
         number: i,
         word: '     ',
         colours: new Array(5).fill(Colour.Grey),
@@ -44,7 +44,7 @@ const App = () => {
       })
     }
 
-    setPastGuesses(blankGuesses)
+    setClues(blankClues)
 
     axios
       .get('http://localhost:3001/api/newgame')
@@ -60,16 +60,16 @@ const App = () => {
       word: guessRef.current.toLowerCase()
     }
 
-    let newPastGuess = null
+    let newClue = null
     
     axios
       .post('http://localhost:3001/api/makeguess', newGuess)
       .then(res => {
-        newPastGuess = res.data
+        newClue = res.data
         
         //Backend says guess contains an error
-        if (newPastGuess.error) {
-          setStatusMessage(newPastGuess.error)
+        if (newClue.error) {
+          setStatusMessage(newClue.error)
           setTimeout(() => {
             setStatusMessage('')
             setGuess('')
@@ -77,7 +77,7 @@ const App = () => {
         //Backend says guess is okay
         } else {
           //Guessed word is correct
-          if (newPastGuess.correct) {
+          if (newClue.correct) {
             setGuessingDisabled(true)
 
             setTimeout(() => {
@@ -88,11 +88,11 @@ const App = () => {
             }, 2500)
           }
 
-          //Update past guesses
-          let newPastGuesses = pastGuessesRef.current
-          let guessIndex = newPastGuess.number
-          newPastGuesses[guessIndex] = newPastGuess
-          setPastGuesses(newPastGuesses)
+          //Update clues
+          let newClues = cluesRef.current
+          let guessIndex = newClue.number
+          newClues[guessIndex] = newClue
+          setClues(newClues)
 
           setGuess('')
         }
@@ -148,7 +148,7 @@ const App = () => {
   //Render app
   return (
     <div style={style}>
-      <PastGuessesList pastGuesses={pastGuesses} Colour={Colour}/>
+      <ClueList clues={clues} Colour={Colour}/>
       <StatusMessageLabel statusMessage={statusMessage}/>
     </div>
   )
