@@ -101,16 +101,33 @@ app.post('/api/makeguess', (req, res) => {
           activeGames = activeGames.filter(g => g.id !== id)
         //Whole word is not correct
         } else {
-          for (let i = 0; i < 5; i++) {
-            const targetChar = targetWord.charAt(i)
-            const guessedChar = guess.charAt(i)
+          //Stop the same letter in the target word from flagging more than one letter in the guessed word
+          let targetCharsHit = new Array(5).fill(false)
 
-            //Right letter, right position
-            if (guessedChar === targetChar)
+          //Right letter, right position
+          for (let i = 0; i < 5; i++) {
+            if (guess.charAt(i) === targetWord.charAt(i)) {
               newClue.colours[i] = Colour.Green
-            //Right letter, wrong position
-            else if (targetWord.includes(guessedChar)) {
-              newClue.colours[i] = Colour.Yellow
+              targetCharsHit[i] = true
+            }
+          }
+
+          //Right letter, wrong position
+          for (let i = 0; i < 5; i++) {
+            //Skip this letter if it's already green
+            if (newClue.colours[i] !== Colour.Green)
+            {
+              const guessedChar = guess.charAt(i)
+
+              if (targetWord.includes(guessedChar)) {
+                //Check all occurences of the guessed letter in the target word in case one has already been hit
+                for (let j = 0; j < 5; j ++) {
+                  if (targetWord[j] === guessedChar && targetCharsHit[j] === false) {
+                    newClue.colours[i] = Colour.Yellow
+                    targetCharsHit[j] = true
+                  }
+                }
+              }
             }
           }
         }
