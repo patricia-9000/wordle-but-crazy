@@ -72,12 +72,11 @@ const App = () => {
       .then(res => {
         newClue = res.data
         
-        //Backend says guess contains an error
-        if (newClue.error) {
-          setStatusMessage(newClue.error)
+        //Backend says guess isn't a real word
+        if (newClue.wordWrong) {
+          setStatusMessage('Not recognised as a word')
           setTimeout(() => {
             setStatusMessage('')
-            setGuess('')
           }, 5000)
         //Backend says guess is okay
         } else {

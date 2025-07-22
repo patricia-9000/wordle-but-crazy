@@ -80,10 +80,10 @@ app.post('/api/makeguess/:id', (req, res) => {
     })
 
     fileStream.on('close', () => {
-      //Return error message if guess isn't recognised as a word
+      //Return word wrong flag if guess isn't recognised as a word
       if (!matchedRealWord) {
         res.json({
-          error: `${guess} is not recognised as a word`
+          wordWrong: true
         })
       //Proceed if word is recognised
       } else {
