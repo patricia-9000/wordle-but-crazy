@@ -74,7 +74,7 @@ const App = () => {
         
         //Backend says guess isn't a real word
         if (newClue.wordWrong) {
-          setStatusMessage('Not recognised as a word')
+          setStatusMessage('Not in word list')
           setTimeout(() => {
             setStatusMessage('')
           }, 5000)
@@ -162,7 +162,7 @@ const App = () => {
   const style = {
     width: 'max-content',
     margin: 'auto',
-    marginTop: '260px',
+    marginTop: '225px',
     textAlign: 'center',
     fontFamily: 'sans-serif'
   }
@@ -170,8 +170,8 @@ const App = () => {
   //Render app
   return (
     <div style={style}>
+      <StatusMessageLabel statusMessage={statusMessage} />
       <ClueList clues={clues} guessIndex={guessIndex} Colour={Colour}/>
-      <StatusMessageLabel statusMessage={statusMessage}/>
     </div>
   )
 }
