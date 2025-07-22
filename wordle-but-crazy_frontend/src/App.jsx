@@ -110,6 +110,10 @@ const App = () => {
           }
         }
       })
+      .catch(err => {
+        alert('Session could not be found - fetching new session')
+        newGame()
+      })
   }
 
   //Handle key presses

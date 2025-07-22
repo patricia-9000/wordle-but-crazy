@@ -63,13 +63,11 @@ app.post('/api/makeguess/:id', (req, res) => {
   const id = parseInt(req.params.id)
   const currentGame = activeGames.find(g => g.id === id)
 
-  //Return error message if game can't be found
-  if (!currentGame) {
-    res.json({
-      error: 'Session could not be found and may have timed out - please refresh'
-    })
+  //Return 404 if game can't be found
+  if (!currentGame)
+    res.status(404).end()
   //Proceed if game is found
-  } else {
+  else {
     const guess = req.body.word
 
     //Check if the guess is a real word
