@@ -48,6 +48,7 @@ const App = () => {
       })
     }
 
+    setGuess('')
     setClues(blankClues)
     setGuessIndex(0)
 
