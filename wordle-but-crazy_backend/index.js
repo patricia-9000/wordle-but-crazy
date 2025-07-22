@@ -49,7 +49,7 @@ app.get('/api/newgame', (req, res) => {
       logGames()
 
       //Delete this game after 15 minutes
-      setTimeout(() => endGame(id), 900000)
+      setTimeout(() => endGame(newGame.id), 900000)
 
       res.json({
         id: newGame.id
