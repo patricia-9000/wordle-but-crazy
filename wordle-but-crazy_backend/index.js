@@ -21,6 +21,17 @@ const Colour = {
 let activeGames = []
 let maxId = 0
 
+//Log active games
+const logGames = () => {
+  console.log('\n' + JSON.stringify(activeGames))
+}
+
+//End game with given ID
+const endGame = id => {
+  activeGames = activeGames.filter(g => g.id !== id)
+  logGames()
+}
+
 //Start new game
 app.get('/api/newgame', (req, res) => {
   //Choose new random target word
@@ -35,13 +46,10 @@ app.get('/api/newgame', (req, res) => {
       }
 
       activeGames.push(newGame)
-      console.log(JSON.stringify(activeGames))
+      logGames()
 
       //Delete this game after 15 minutes
-      setTimeout(() => {
-        activeGames = activeGames.filter(g => g.id !== newGame.id)
-        console.log(JSON.stringify(activeGames))
-      }, 900000)
+      setTimeout(() => endGame(id), 900000)
 
       res.json({
         id: newGame.id
@@ -98,7 +106,7 @@ app.post('/api/makeguess', (req, res) => {
           newClue.correct = true
 
           //End current game
-          activeGames = activeGames.filter(g => g.id !== id)
+          endGame(id)
         //Whole word is not correct
         } else {
           //Stop the same letter in the target word from flagging more than one letter in the guessed word
