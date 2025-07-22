@@ -95,7 +95,8 @@ app.post('/api/makeguess', (req, res) => {
           number: currentGame.guesses,
           word: guess,
           colours: new Array(5).fill(Colour.Grey),
-          correct: false
+          correct: false,
+          answer: null
         }
 
         currentGame.guesses++
@@ -137,6 +138,12 @@ app.post('/api/makeguess', (req, res) => {
                 }
               }
             }
+          }
+
+          //After 5 guesses, provide the answer and end the game
+          if (currentGame.guesses === 6) {
+            newClue.answer = targetWord
+            endGame(id)
           }
         }
 

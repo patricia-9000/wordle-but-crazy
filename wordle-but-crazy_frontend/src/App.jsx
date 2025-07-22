@@ -81,16 +81,13 @@ const App = () => {
           }, 5000)
         //Backend says guess is okay
         } else {
-          setGuessIndex(guessIndexRef.current + 1)
+          setGuessIndex(newClue.number + 1)
 
-          //Guessed word is correct
+          //End game after a pause if guessed word is correct
           if (newClue.correct) {
             setGuessingDisabled(true)
-
             setTimeout(() => {
               setGuessingDisabled(false)
-
-              //Start new game
               newGame()
             }, 2500)
           }
@@ -101,6 +98,17 @@ const App = () => {
           setClues(newClues)
 
           setGuess('')
+
+          //End game after a pause if all guesses have been used
+          if (guessIndexRef.current === 5) {
+            setStatusMessage(`The correct answer was ${newClue.answer}`)
+            setGuessingDisabled(true)
+            setTimeout(() => {
+              setStatusMessage('')
+              setGuessingDisabled(false)
+              newGame()
+            }, 2500)
+          }
         }
       })
   }
