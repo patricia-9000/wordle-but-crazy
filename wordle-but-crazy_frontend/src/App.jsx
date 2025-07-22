@@ -61,14 +61,13 @@ const App = () => {
   //Submit guesses to backend when 'make guess' button clicked
   const makeGuess = () => {
     let newGuess = {
-      id: gameIdRef.current,
       word: guessRef.current.toLowerCase()
     }
 
     let newClue = null
     
     axios
-      .post('http://localhost:3001/api/makeguess', newGuess)
+      .post(`http://localhost:3001/api/makeguess/${gameIdRef.current}`, newGuess)
       .then(res => {
         newClue = res.data
         

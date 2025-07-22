@@ -1,7 +1,6 @@
-POST http://localhost:3001/api/makeguess
+POST http://localhost:3001/api/makeguess/0
 content-type: application/json
 
 {
-  "id": 0,
   "word": "horse"
 }

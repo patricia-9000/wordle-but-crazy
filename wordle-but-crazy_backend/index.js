@@ -58,9 +58,9 @@ app.get('/api/newgame', (req, res) => {
 })
 
 //Handle incoming guessed word
-app.post('/api/makeguess', (req, res) => {
+app.post('/api/makeguess/:id', (req, res) => {
   //Find client's game using their game ID
-  const id = req.body.id
+  const id = parseInt(req.params.id)
   const currentGame = activeGames.find(g => g.id === id)
 
   //Return error message if game can't be found
