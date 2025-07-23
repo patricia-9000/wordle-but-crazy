@@ -1,5 +1,6 @@
 const EnterKey = ({keySelected}) => {
   const style = {
+    cursor: 'pointer',
     fontSize: '8pt',
     verticalAlign: 'top',
     lineHeight: '58px',

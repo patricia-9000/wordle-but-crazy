@@ -1,5 +1,6 @@
 const Key = ({k, keySelected, Colour}) => {
   const style = {
+    cursor: 'pointer',
     fontSize: '15pt',
     lineHeight: '58px',
     userSelect: 'none',
