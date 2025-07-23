@@ -6,6 +6,8 @@ import Keyboard from './components/keyboard/Keyboard'
 import StatusMessageLabel from './components/StatusMessageLabel'
 
 const App = () => {
+  const BASE_URL = 'http://localhost:3001'
+
   const Colour = {
     Grey: 'Grey',
     Yellow: 'Yellow',
@@ -63,7 +65,7 @@ const App = () => {
     }}))
 
     axios
-      .get('http://localhost:3001/api/newgame')
+      .get(`${BASE_URL}/api/newgame`)
       .then(res => {
         setGameId(res.data.id)
       })
@@ -78,7 +80,7 @@ const App = () => {
     let newClue = null
     
     axios
-      .post(`http://localhost:3001/api/makeguess/${gameIdRef.current}`, newGuess)
+      .post(`${BASE_URL}/api/makeguess/${gameIdRef.current}`, newGuess)
       .then(res => {
         newClue = res.data
         
