@@ -2,6 +2,7 @@ import {useState, useEffect, useRef, useCallback} from 'react'
 import axios from 'axios'
 
 import ClueList from './components/cluelist/ClueList'
+import Keyboard from './components/keyboard/Keyboard'
 import StatusMessageLabel from './components/StatusMessageLabel'
 
 const App = () => {
@@ -27,6 +28,10 @@ const App = () => {
   const cluesRef = useRef({})
   cluesRef.current = clues
 
+  const [keys, setKeys] = useState([])
+  const keysRef = useRef({})
+  keysRef.current = keys
+
   const [guessingDisabled, setGuessingDisabled] = useState(false)
   const guessingDisabledRef = useRef({})
   guessingDisabledRef.current = guessingDisabled
@@ -35,7 +40,7 @@ const App = () => {
   const statusMessageRef = useRef({})
   statusMessageRef.current = statusMessage
 
-  //Reset clues array and request new game from backend
+  //Reset states and request new game from backend
   const newGame = () => {
     let blankClues = []
 
@@ -48,9 +53,14 @@ const App = () => {
       })
     }
 
-    setGuess('')
     setClues(blankClues)
+    setGuess('')
     setGuessIndex(0)
+    const letters = 'qwertyuiopasdfghjklzxcvbnm'.split('')
+    setKeys(letters.map(l => {return {
+      letter: l,
+      colour: null
+    }}))
 
     axios
       .get('http://localhost:3001/api/newgame')
@@ -90,6 +100,22 @@ const App = () => {
               newGame()
             }, 2500)
           }
+
+          //Update keyboard
+          let newKeys = keysRef.current
+
+          for (let i = 0; i < 5; i ++) {
+            newKeys = newKeys.map(k => {
+              if (k.letter === newClue.word[i]) {
+                let newKey = k
+                newKey.colour = newClue.colours[i]
+                return newKey
+              } else
+                return k
+            })
+          }
+
+          setKeys(newKeys)
 
           //Update clues
           let newClues = cluesRef.current
@@ -172,6 +198,7 @@ const App = () => {
     <div style={style}>
       <StatusMessageLabel statusMessage={statusMessage} />
       <ClueList clues={clues} guessIndex={guessIndex} Colour={Colour}/>
+      <Keyboard keys={keys} Colour={Colour}/>
     </div>
   )
 }
