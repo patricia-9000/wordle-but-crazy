@@ -105,14 +105,15 @@ const App = () => {
           let newKeys = keysRef.current
 
           for (let i = 0; i < 5; i ++) {
-            newKeys = newKeys.map(k => {
-              if (k.letter === newClue.word[i]) {
-                let newKey = k
-                newKey.colour = newClue.colours[i]
-                return newKey
-              } else
-                return k
-            })
+            for (let j = 0; j < 26; j ++) {
+              if (newKeys[j].letter === newClue.word[i]) {
+                //Don't change key's colour if it's already green
+                if (newKeys[j].colour !== Colour.Green) {
+                  newKeys[j].colour = newClue.colours[i]
+                }
+                break;
+              }
+            }
           }
 
           setKeys(newKeys)
