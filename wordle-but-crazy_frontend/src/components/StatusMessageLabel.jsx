@@ -1,6 +1,7 @@
 const StatusMessageLabel = ({statusMessage}) => {
   const style = {
     fontSize: '15pt',
+    userSelect: 'none',
     color: 'white',
     width: 'max-content',
     height: '23px',

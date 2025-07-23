@@ -2,6 +2,7 @@ const Key = ({k, Colour}) => {
   const style = {
     fontSize: '15pt',
     lineHeight: '58px',
+    userSelect: 'none',
     width: '43px',
     height: '58px',
     backgroundColor: '#D3D6DA',

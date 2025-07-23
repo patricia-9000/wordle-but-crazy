@@ -1,6 +1,7 @@
 const ClueLetter = ({letter, currentGuess, thisColour, Colour}) => {
   let style = {
     fontSize: '25pt',
+    userSelect: 'none',
     color: '#FFFFFF',
     width: '56px',
     height: '56px',
