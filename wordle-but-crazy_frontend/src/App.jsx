@@ -128,7 +128,7 @@ const App = () => {
           setGuess('')
 
           //End game after a pause if all guesses have been used
-          if (guessIndexRef.current === 5) {
+          if (guessIndexRef.current === 5 && !newClue.correct) {
             setStatusMessage(`The correct answer was ${newClue.answer}`)
             setGuessingDisabled(true)
             setTimeout(() => {
