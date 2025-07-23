@@ -7,6 +7,7 @@ import StatusMessageLabel from './components/StatusMessageLabel'
 
 const App = () => {
   const BASE_URL = 'http://localhost:3001'
+  const MESSAGE_TIME = 2500
 
   const Colour = {
     Grey: 'Grey',
@@ -89,18 +90,20 @@ const App = () => {
           setStatusMessage('Not in word list')
           setTimeout(() => {
             setStatusMessage('')
-          }, 5000)
+          }, MESSAGE_TIME)
         //Backend says guess is okay
         } else {
           setGuessIndex(newClue.number + 1)
 
           //End game after a pause if guessed word is correct
           if (newClue.correct) {
+            setStatusMessage('Correct!')
             setGuessingDisabled(true)
             setTimeout(() => {
+              setStatusMessage('')
               setGuessingDisabled(false)
               newGame()
-            }, 2500)
+            }, MESSAGE_TIME)
           }
 
           //Update keyboard
@@ -135,7 +138,7 @@ const App = () => {
               setStatusMessage('')
               setGuessingDisabled(false)
               newGame()
-            }, 2500)
+            }, MESSAGE_TIME)
           }
         }
       })
