@@ -1,4 +1,4 @@
-const BackspaceKey = () => {
+const BackspaceKey = ({keySelected}) => {
   const style = {
     fontSize: '8pt',
     verticalAlign: 'top',
@@ -16,7 +16,10 @@ const BackspaceKey = () => {
   }
 
   return (
-    <div style={style}>
+    <div
+      style={style}
+      onClick={() => keySelected('Backspace')}
+    >
       <b>BKSP</b>
     </div>
   )

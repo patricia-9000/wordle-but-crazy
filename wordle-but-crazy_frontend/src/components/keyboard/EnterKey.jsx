@@ -1,4 +1,4 @@
-const EnterKey = () => {
+const EnterKey = ({keySelected}) => {
   const style = {
     fontSize: '8pt',
     verticalAlign: 'top',
@@ -16,7 +16,10 @@ const EnterKey = () => {
   }
 
   return (
-    <div style={style}>
+    <div
+      style={style}
+      onClick={() => keySelected('Enter')}
+    >
       <b>ENTER</b>
     </div>
   )
