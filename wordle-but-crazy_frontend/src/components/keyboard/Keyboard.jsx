@@ -5,8 +5,12 @@ const Keyboard = ({keys, Colour}) => {
   const row2 = keys.slice(10, 19)
   const row3 = keys.slice(19, 26)
 
+  const style = {
+    marginTop: '20px'
+  }
+
   return (
-    <div>
+    <div style={style}>
       <div>
         {row1.map((k, i) => <Key k={k} Colour={Colour} key={i}/>)}
       </div>
