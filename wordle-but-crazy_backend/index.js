@@ -23,7 +23,8 @@ let maxId = 0
 
 //Log active games
 const logGames = () => {
-  console.log('\n' + JSON.stringify(activeGames))
+  console.log('')
+  activeGames.forEach(g => console.log(g))
 }
 
 //End game with given ID
