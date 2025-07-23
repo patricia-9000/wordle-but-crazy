@@ -9,8 +9,7 @@ const StatusMessageLabel = ({statusMessage}) => {
     borderRadius: '10px',
     backgroundColor: 'black',
     margin: 'auto',
-    marginTop: '5px',
-    marginBottom: '5px'
+    marginBottom: '20px'
   }
 
   if (statusMessage === '')

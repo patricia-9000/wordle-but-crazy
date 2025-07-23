@@ -191,7 +191,7 @@ const App = () => {
   const style = {
     width: 'max-content',
     margin: 'auto',
-    marginTop: '125px',
+    marginTop: '100px',
     textAlign: 'center',
     fontFamily: 'sans-serif'
   }
