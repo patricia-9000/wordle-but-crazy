@@ -145,10 +145,9 @@ const App = () => {
       })
   }
 
-  //Handle key presses
-  const keyPressed = useCallback((event) => {
+  //Handle all key selections (both physical key presses and on-screen key clicks)
+  const keySelected = key => {
     if (!guessingDisabledRef.current) {
-      const key = event.key
       let newGuess = ''
 
       if (key === 'Enter') {
@@ -158,9 +157,9 @@ const App = () => {
         if (key === 'Backspace') {
           newGuess = guessRef.current.substring(0, guessRef.current.length - 1)
           setGuess(newGuess)
-        } else if (key.length === 1 
-                && /^[a-zA-Z]/.test(key) 
-                && guessRef.current.length < 5) {
+        } else if (key.length === 1
+          && /^[a-zA-Z]/.test(key)
+          && guessRef.current.length < 5) {
           newGuess = guessRef.current + key
           setGuess(newGuess)
         }
@@ -171,6 +170,11 @@ const App = () => {
         setClues(newClues)
       }
     }
+  }
+
+  //Handle key presses
+  const keyPressed = useCallback((event) => {
+    keySelected(event.key)
   }, [])
 
   //Detect key presses on the page
@@ -201,7 +205,7 @@ const App = () => {
     <div style={style}>
       <StatusMessageLabel statusMessage={statusMessage} />
       <ClueList clues={clues} guessIndex={guessIndex} Colour={Colour}/>
-      <Keyboard keys={keys} Colour={Colour}/>
+      <Keyboard keys={keys} keySelected={keySelected} Colour={Colour}/>
     </div>
   )
 }

@@ -1,4 +1,4 @@
-const Key = ({k, Colour}) => {
+const Key = ({k, keySelected, Colour}) => {
   const style = {
     fontSize: '15pt',
     lineHeight: '58px',
@@ -30,7 +30,10 @@ const Key = ({k, Colour}) => {
   }
 
   return (
-    <div style={style}>
+    <div
+      style={style}
+      onClick={() => keySelected(k.letter)}
+    >
       <b>{k.letter.toUpperCase()}</b>
     </div>
   )
