@@ -2,19 +2,49 @@ import styled from 'styled-components'
 
 import ClueWord from './ClueWord'
 
-const StyledTable = styled.table`
+const StyledClueList = styled.table`
   margin: 0 auto;
   border-collapse: separate;
   border-spacing: 5px 6px;
 `
 
+const StyledClueLetter = styled.td`
+  font-size: 25pt;
+  user-select: none;
+  color: ${props => props.$currentGuess ? 'black' : 'white'};
+  width: 56px;
+  height: 56px;
+  background-color: ${props => {
+    if (props.$letter === ' ' || props.$currentGuess)
+      return 'white'
+    else
+      return props.$Colour[props.$thisColour]
+  }};
+  border-width: 2px;
+  border-style: solid;
+  border-color: ${props => {
+    if (props.$letter === ' ')
+      return props.$Colour.LightGrey
+    else if (props.$currentGuess)
+      return props.$Colour.Grey
+    else
+      return props.$Colour[props.$thisColour]
+  }};
+`
+
 const ClueList = ({clues, guessIndex, Colour}) => {
   return(
-    <StyledTable>
+    <StyledClueList>
       <tbody>
-        {clues.map(clue => <ClueWord clue={clue} guessIndex={guessIndex} Colour={Colour} key={clue.number}/>)}
+        {clues.map(clue => <ClueWord
+          clue={clue}
+          guessIndex={guessIndex}
+          Colour={Colour}
+          StyledClueLetter={StyledClueLetter}
+          key={clue.number}
+        />)}
       </tbody>
-    </StyledTable>
+    </StyledClueList>
   )
 }
 

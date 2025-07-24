@@ -4,8 +4,52 @@ import Key from './Key'
 import EnterKey from './EnterKey'
 import BackspaceKey from './BackspaceKey'
 
-const StyledDiv = styled.div`
+const StyledKeyboard = styled.div`
   margin: 20px 0;
+`
+
+const StyledKey = styled.div`
+  cursor: pointer;
+  font-size: 15pt;
+  line-height: 54px;
+  user-select: none;
+  color: ${props => props.$thisColour ? 'white' : 'black'};
+  width: 39px;
+  height: 54px;
+  background-color: ${props => {
+    if (props.$thisColour)
+      return props.$Colour[props.$thisColour]
+    else
+      return props.$Colour.LightGrey
+  }};
+  border-width: 2px;
+  border-radius: 5px;
+  border-style: solid;
+  border-color: ${props => {
+    if (props.$thisColour)
+      return props.$Colour[props.$thisColour]
+    else
+      return props.$Colour.LightGrey
+  }};
+  margin: 4px 3px;
+  display: inline-block;
+
+  &:hover {
+    border-color: black;
+  }
+
+  &:active {
+    color: black;
+    background-color: white;
+  }
+`
+
+const StyledFunctionKey = styled(StyledKey)`
+  font-size: 8pt;
+  vertical-align: top;
+  width: 60px;
+  background-color: ${props => props.$Colour.LightGrey};
+  border-color: ${props => props.$Colour.LightGrey};
 `
 
 const Keyboard = ({keys, keySelected, Colour}) => {
@@ -14,19 +58,45 @@ const Keyboard = ({keys, keySelected, Colour}) => {
   const row3 = keys.slice(19, 26)
 
   return (
-    <StyledDiv>
+    <StyledKeyboard>
       <div>
-        {row1.map((k, i) => <Key k={k} keySelected={keySelected} Colour={Colour} key={i}/>)}
+        {row1.map((k, i) => <Key
+          k={k}
+          keySelected={keySelected}
+          Colour={Colour}
+          StyledKey={StyledKey}
+          key={i}
+        />)}
       </div>
       <div>
-        {row2.map((k, i) => <Key k={k} keySelected={keySelected} Colour={Colour} key={i}/>)}
+        {row2.map((k, i) => <Key
+          k={k}
+          keySelected={keySelected}
+          Colour={Colour}
+          StyledKey={StyledKey}
+          key={i}
+        />)}
       </div>
       <div>
-        <EnterKey keySelected={keySelected} Colour={Colour}/>
-        {row3.map((k, i) => <Key k={k} keySelected={keySelected} Colour={Colour} key={i}/>)}
-        <BackspaceKey keySelected={keySelected} Colour={Colour} />
+        <EnterKey
+          keySelected={keySelected}
+          Colour={Colour}
+          StyledFunctionKey={StyledFunctionKey}
+        />
+        {row3.map((k, i) => <Key
+          k={k}
+          keySelected={keySelected}
+          Colour={Colour}
+          StyledKey={StyledKey}
+          key={i}
+        />)}
+        <BackspaceKey
+          keySelected={keySelected}
+          Colour={Colour}
+          StyledFunctionKey={StyledFunctionKey}
+        />
       </div>
-    </StyledDiv>
+    </StyledKeyboard>
   )
 }
 
