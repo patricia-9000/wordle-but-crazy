@@ -1,43 +1,50 @@
+import styled from 'styled-components'
+
+const StyledTd = styled.td`
+  font-size: 25pt;
+  user-select: none;
+  color: ${props => props.$currentGuess ? 'black' : 'white'};
+  width: 56px;
+  height: 56px;
+  background-color: ${props => {
+    if (props.$letter === ' ' || props.$currentGuess)
+      return 'white'
+    else {
+      switch (props.$thisColour) {
+        case props.$Colour.Grey:
+          return '#787C7E'
+        case props.$Colour.Yellow:
+          return '#D1B036'
+        case props.$Colour.Green:
+          return '#6AAA64'
+      }
+    }
+  }};
+  border-width: 2px;
+  border-style: solid;
+  border-color: ${props => {
+    if (props.$letter === ' ')
+      return '#D3D6DA'
+    else if (props.$currentGuess)
+      return '#878A8C'
+    else {
+      switch (props.$thisColour) {
+        case props.$Colour.Grey:
+          return '#787C7E'
+        case props.$Colour.Yellow:
+          return '#D1B036'
+        case props.$Colour.Green:
+          return '#6AAA64'
+      }
+    }
+  }};
+`
+
 const ClueLetter = ({letter, currentGuess, thisColour, Colour}) => {
-  let style = {
-    fontSize: '25pt',
-    userSelect: 'none',
-    color: '#FFFFFF',
-    width: '56px',
-    height: '56px',
-    backgroundColor: '#FFFFFF',
-    borderWidth: '2px',
-    borderStyle: 'solid',
-    borderColor: '#D3D6DA'
-  }
-
-  if (letter !== ' ') {
-    switch (thisColour) {
-      case Colour.Grey:
-        style.backgroundColor = '#787C7E'
-        style.borderColor = '#787C7E'
-        break;
-      case Colour.Yellow:
-        style.backgroundColor = '#D1B036'
-        style.borderColor = '#D1B036'
-        break;
-      case Colour.Green:
-        style.backgroundColor = '#6AAA64'
-        style.borderColor = '#6AAA64'
-        break;
-    }
-
-    if (currentGuess) {
-      style.color = '#000000'
-      style.backgroundColor = '#FFFFFF'
-      style.borderColor = '#878A8C'
-    }
-  }
-
   return(
-    <td style={style}>
+    <StyledTd $letter={letter} $currentGuess={currentGuess} $thisColour={thisColour} $Colour={Colour}>
       <b>{letter.toUpperCase()}</b>
-    </td>
+    </StyledTd>
   )
 }
 

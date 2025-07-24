@@ -1,18 +1,20 @@
+import styled from 'styled-components'
+
 import Key from './Key'
 import EnterKey from './EnterKey'
 import BackspaceKey from './BackspaceKey'
+
+const StyledDiv = styled.div`
+  margin: 20px 0;
+`
 
 const Keyboard = ({keys, keySelected, Colour}) => {
   const row1 = keys.slice(0, 10)
   const row2 = keys.slice(10, 19)
   const row3 = keys.slice(19, 26)
 
-  const style = {
-    marginTop: '20px'
-  }
-
   return (
-    <div style={style}>
+    <StyledDiv>
       <div>
         {row1.map((k, i) => <Key k={k} keySelected={keySelected} Colour={Colour} key={i}/>)}
       </div>
@@ -24,7 +26,7 @@ const Keyboard = ({keys, keySelected, Colour}) => {
         {row3.map((k, i) => <Key k={k} keySelected={keySelected} Colour={Colour} key={i}/>)}
         <BackspaceKey keySelected={keySelected} />
       </div>
-    </div>
+    </StyledDiv>
   )
 }
 

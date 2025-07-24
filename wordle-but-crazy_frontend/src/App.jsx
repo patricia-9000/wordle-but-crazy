@@ -1,9 +1,17 @@
 import {useState, useEffect, useRef, useCallback} from 'react'
 import axios from 'axios'
+import styled from 'styled-components'
 
 import ClueList from './components/cluelist/ClueList'
 import Keyboard from './components/keyboard/Keyboard'
 import StatusMessageLabel from './components/StatusMessageLabel'
+
+const StyledDiv = styled.div`
+  font-family: sans-serif;
+  text-align: center;
+  width: max-content;
+  margin: 100px auto;
+`
 
 const App = () => {
   const BASE_URL = 'http://localhost:3001'
@@ -194,22 +202,13 @@ const App = () => {
     newGame()
   }, [])
 
-  //App CSS
-  const style = {
-    width: 'max-content',
-    margin: 'auto',
-    marginTop: '100px',
-    textAlign: 'center',
-    fontFamily: 'sans-serif'
-  }
-
   //Render app
   return (
-    <div style={style}>
-      <StatusMessageLabel statusMessage={statusMessage} />
+    <StyledDiv>
+      <StatusMessageLabel statusMessage={statusMessage}/>
       <ClueList clues={clues} guessIndex={guessIndex} Colour={Colour}/>
       <Keyboard keys={keys} keySelected={keySelected} Colour={Colour}/>
-    </div>
+    </StyledDiv>
   )
 }
 

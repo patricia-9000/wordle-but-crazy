@@ -1,18 +1,20 @@
+import styled from 'styled-components'
+
 import ClueWord from './ClueWord'
 
-const ClueList = ({clues, guessIndex, Colour}) => {
-  const style = {
-    margin: 'auto',
-    borderCollapse: 'separate',
-    borderSpacing: '5px'
-  }
+const StyledTable = styled.table`
+  margin: 0 auto;
+  border-collapse: separate;
+  border-spacing: 5px 6px;
+`
 
+const ClueList = ({clues, guessIndex, Colour}) => {
   return(
-    <table style={style}>
+    <StyledTable>
       <tbody>
         {clues.map(clue => <ClueWord clue={clue} guessIndex={guessIndex} Colour={Colour} key={clue.number}/>)}
       </tbody>
-    </table>
+    </StyledTable>
   )
 }
 

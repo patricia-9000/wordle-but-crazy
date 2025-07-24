@@ -1,28 +1,24 @@
-const BackspaceKey = ({keySelected}) => {
-  const style = {
-    cursor: 'pointer',
-    fontSize: '8pt',
-    verticalAlign: 'top',
-    lineHeight: '58px',
-    userSelect: 'none',
-    width: '64px',
-    height: '58px',
-    backgroundColor: '#D3D6DA',
-    borderRadius: '5px',
-    marginTop: '4px',
-    marginBottom: '4px',
-    marginLeft: '3px',
-    marginRight: '3px',
-    display: 'inline-block'
-  }
+import styled from 'styled-components'
 
+const StyledDiv = styled.div`
+  cursor: pointer;
+  font-size: 8pt;
+  vertical-align: top;
+  line-height: 58px;
+  user-select: none;
+  width: 64px;
+  height: 58px;
+  background-color: #D3D6DA;
+  border-radius: 5px;
+  margin: 4px 3px;
+  display: inline-block;
+`
+
+const BackspaceKey = ({keySelected}) => {
   return (
-    <div
-      style={style}
-      onClick={() => keySelected('Backspace')}
-    >
+    <StyledDiv onClick={() => keySelected('Backspace')}>
       <b>BKSP</b>
-    </div>
+    </StyledDiv>
   )
 }
 
