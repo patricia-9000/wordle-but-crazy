@@ -1,6 +1,6 @@
 const ClueLetter = ({letter, currentGuess, thisColour, Colour, StyledClueLetter}) => {
   return(
-    <StyledClueLetter
+    <StyledClueLetter className={letter === ' ' ? 'blank' : 'active'}
       $letter={letter}
       $currentGuess={currentGuess}
       $thisColour={thisColour}
