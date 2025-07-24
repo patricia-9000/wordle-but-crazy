@@ -39,9 +39,10 @@ const StyledKey = styled.div`
   }
 
   &:active {
-    color: black;
-    background-color: white;
+    transform: scale(0.9);
   }
+
+  transition: border-color 50ms;
 `
 
 const StyledFunctionKey = styled(StyledKey)`
