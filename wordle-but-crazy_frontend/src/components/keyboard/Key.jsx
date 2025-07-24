@@ -1,6 +1,6 @@
 const Key = ({k, keySelected, Colour, StyledKey}) => {
   return (
-    <StyledKey
+    <StyledKey className={k.colour ? 'highlighted' : 'default'}
       $thisColour={k.colour}
       $Colour={Colour}
       onClick={() => keySelected(k.letter)}

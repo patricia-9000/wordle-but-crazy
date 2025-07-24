@@ -1,8 +1,22 @@
-import styled from 'styled-components'
+import styled, {keyframes} from 'styled-components'
 
 import Key from './Key'
 import EnterKey from './EnterKey'
 import BackspaceKey from './BackspaceKey'
+
+const pop = keyframes`
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.1);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+`
 
 const StyledKeyboard = styled.div`
   margin: 20px 0;
@@ -42,7 +56,11 @@ const StyledKey = styled.div`
     transform: scale(0.9);
   }
 
-  transition: border-color 50ms;
+  &.highlighted {
+    animation: ${pop} 0.05s linear 1;
+  }
+
+  transition: all 50ms;
 `
 
 const StyledFunctionKey = styled(StyledKey)`
