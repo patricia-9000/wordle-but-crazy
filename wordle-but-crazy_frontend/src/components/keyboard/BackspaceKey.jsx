@@ -8,15 +8,16 @@ const StyledDiv = styled.div`
   user-select: none;
   width: 64px;
   height: 58px;
-  background-color: #D3D6DA;
+  background-color: ${props => props.$Colour.LightGrey};
   border-radius: 5px;
   margin: 4px 3px;
   display: inline-block;
 `
 
-const BackspaceKey = ({keySelected}) => {
+const BackspaceKey = ({keySelected, Colour}) => {
   return (
-    <StyledDiv onClick={() => keySelected('Backspace')}>
+    <StyledDiv $Colour={Colour}
+    onClick={() => keySelected('Backspace')}>
       <b>BKSP</b>
     </StyledDiv>
   )

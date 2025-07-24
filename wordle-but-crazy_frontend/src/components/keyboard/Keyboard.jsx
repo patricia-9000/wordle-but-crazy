@@ -22,9 +22,9 @@ const Keyboard = ({keys, keySelected, Colour}) => {
         {row2.map((k, i) => <Key k={k} keySelected={keySelected} Colour={Colour} key={i}/>)}
       </div>
       <div>
-        <EnterKey keySelected={keySelected} />
+        <EnterKey keySelected={keySelected} Colour={Colour}/>
         {row3.map((k, i) => <Key k={k} keySelected={keySelected} Colour={Colour} key={i}/>)}
-        <BackspaceKey keySelected={keySelected} />
+        <BackspaceKey keySelected={keySelected} Colour={Colour} />
       </div>
     </StyledDiv>
   )

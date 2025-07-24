@@ -18,9 +18,10 @@ const App = () => {
   const MESSAGE_TIME = 2500
 
   const Colour = {
-    Grey: 'Grey',
-    Yellow: 'Yellow',
-    Green: 'Green'
+    LightGrey: '#D3D6DA',
+    Grey: '#787C7E',
+    Yellow: '#D1B036',
+    Green: '#6AAA64'
   }
 
   const [gameId, setGameId] = useState(null)

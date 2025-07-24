@@ -9,16 +9,10 @@ const StyledDiv = styled.div`
   width: 43px;
   height: 58px;
   background-color: ${props => {
-    switch (props.$thisColour) {
-      case props.$Colour.Grey:
-        return '#787C7E'
-      case props.$Colour.Yellow:
-        return '#D1B036'
-      case props.$Colour.Green:
-        return '#6AAA64'
-      default:
-        return '#D3D6DA'
-    }
+    if (props.$thisColour)
+      return props.$Colour[props.$thisColour]
+    else
+      return props.$Colour.LightGrey
   }};
   border-radius: 5px;
   margin: 4px 3px;
