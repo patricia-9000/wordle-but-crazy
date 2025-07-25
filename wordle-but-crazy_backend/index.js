@@ -8,7 +8,7 @@ app.use(cors())
 const fs = require('fs')
 const nthline = require('nthline')
 
-const FIVE_LETTER_WORDS = 3103
+const FIVE_LETTER_WORDS = 5757
 const WORDS_FILEPATH = './WORDS'
 
 const Colour = {
