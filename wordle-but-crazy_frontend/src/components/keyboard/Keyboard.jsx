@@ -52,7 +52,7 @@ const StyledKey = styled.div`
 const StyledFunctionKey = styled(StyledKey)`
   font-size: 8pt;
   vertical-align: top;
-  width: 60px;
+  width: 64px;
   background-color: ${props => props.$Colour.LightGrey};
   border-color: ${props => props.$Colour.LightGrey};
 `
