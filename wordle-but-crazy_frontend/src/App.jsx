@@ -38,6 +38,32 @@ const App = () => {
     Green: '#6AAA64'
   }
 
+  const generateBlankClues = () => {
+    let blankClues = []
+
+    for (let i = 0; i < 6; i++) {
+      blankClues.push({
+        number: i,
+        word: '     ',
+        colours: new Array(5).fill(Colour.Grey),
+        correct: false
+      })
+    }
+
+    return blankClues
+  }
+
+  const generateBlankKeys = () => {
+    const letters = 'qwertyuiopasdfghjklzxcvbnm'.split('')
+    const blankKeys = letters.map(l => {
+      return {
+        letter: l,
+        colour: null
+      }
+    })
+    return blankKeys
+  }
+
   const [gameId, setGameId] = useState(null)
   const gameIdRef = useRef({})
   gameIdRef.current = gameId
@@ -50,11 +76,11 @@ const App = () => {
   const guessIndexRef = useRef({})
   guessIndexRef.current = guessIndex
 
-  const [clues, setClues] = useState([])
+  const [clues, setClues] = useState(generateBlankClues())
   const cluesRef = useRef({})
   cluesRef.current = clues
 
-  const [keys, setKeys] = useState([])
+  const [keys, setKeys] = useState(generateBlankKeys())
   const keysRef = useRef({})
   keysRef.current = keys
 
@@ -68,27 +94,12 @@ const App = () => {
 
   //Reset states and request new game from backend
   const newGame = () => {
-    let blankClues = []
-
-    for (let i = 0; i < 6; i++) {
-      blankClues.push({
-        number: i,
-        word: '     ',
-        colours: new Array(5).fill(Colour.Grey),
-        correct: false
-      })
-    }
-
     setGuess('')
     setGuessIndex(0)
-    setClues(blankClues)
+    setClues(generateBlankClues())
+    setKeys(generateBlankKeys())
     setGuessingDisabled(false)
     setStatusMessage('')
-    const letters = 'qwertyuiopasdfghjklzxcvbnm'.split('')
-    setKeys(letters.map(l => {return {
-      letter: l,
-      colour: null
-    }}))
 
     axios
       .get(`${BASE_URL}/api/newgame`)
