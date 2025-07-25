@@ -46,7 +46,8 @@ const App = () => {
         number: i,
         word: '     ',
         colours: new Array(5).fill(Colour.Grey),
-        correct: false
+        correct: false,
+        answer: null
       })
     }
 
@@ -84,9 +85,20 @@ const App = () => {
   const keysRef = useRef({})
   keysRef.current = keys
 
+  const [answer, setAnswer] = useState(null)
+  const answerRef = useRef({})
+  answerRef.current = answer
+
   const [guessingDisabled, setGuessingDisabled] = useState(true)
   const guessingDisabledRef = useRef({})
   guessingDisabledRef.current = guessingDisabled
+
+  const [restartState, setRestartState] = useState({
+    restarting: false,
+    firstWord: ''
+  })
+  const restartStateRef = useRef({})
+  restartStateRef.current = restartState
 
   const [statusMessage, setStatusMessage] = useState('')
 
@@ -98,17 +110,41 @@ const App = () => {
     setGuessIndex(0)
     setClues(generateBlankClues())
     setKeys(generateBlankKeys())
-    setGuessingDisabled(false)
+
+    setGuess(restartStateRef.current.firstWord)
 
     axios
       .get(`${BASE_URL}/api/newgame`)
       .then(res => {
         setGameId(res.data.id)
+        
+        //Submit the previous answer as the first guess if restarting from previous game
+        if (restartStateRef.current.restarting) {
+          let newRestartState = restartStateRef.current
+          newRestartState.restarting = false
+          setRestartState(newRestartState)
+
+          makeGuess(res.data.id)
+        }
+
+        setGuessingDisabled(false)
       })
   }
 
+  //Establish the restart state for transitioning into the next game, then start a new game
+  const restartGame = () => {
+    setRestartState({
+      restarting: true,
+      firstWord: answerRef.current
+    })
+
+    setTimeout(() => {
+      newGame()
+    }, 1000)
+  }
+
   //Submit guesses to backend when 'make guess' button clicked
-  const makeGuess = () => {
+  const makeGuess = (id = gameIdRef.current) => {
     let newGuess = {
       word: guessRef.current.toLowerCase()
     }
@@ -116,7 +152,7 @@ const App = () => {
     let newClue = null
     
     axios
-      .post(`${BASE_URL}/api/makeguess/${gameIdRef.current}`, newGuess)
+      .post(`${BASE_URL}/api/makeguess/${id}`, newGuess)
       .then(res => {
         newClue = res.data
         
@@ -132,15 +168,16 @@ const App = () => {
         } else {
           setGuessIndex(newClue.number + 1)
 
-          //End game after a pause if guessed word is correct
+          //Restart game after a pause if guessed word is correct
           if (newClue.correct) {
+            setAnswer(newClue.word)
             setStatusMessage('Correct!')
             setShowStatusMessage(true)
             setGuessingDisabled(true)
 
             setTimeout(() => {
               setShowStatusMessage(false)
-              newGame()
+              restartGame()
             }, MESSAGE_TIME)
           }
 
@@ -168,15 +205,16 @@ const App = () => {
 
           setGuess('')
 
-          //End game after a pause if all guesses have been used
+          //Restart game after a pause if all guesses have been used
           if (guessIndexRef.current === 5 && !newClue.correct) {
+            setAnswer(newClue.answer)
             setStatusMessage(`The correct answer was ${newClue.answer}`)
             setShowStatusMessage(true)
             setGuessingDisabled(true)
 
             setTimeout(() => {
               setShowStatusMessage(false)
-              newGame()
+              restartGame()
             }, MESSAGE_TIME)
           }
         }
@@ -237,7 +275,7 @@ const App = () => {
   return (
     <StyledDiv>
       <StatusMessageLabel statusMessage={statusMessage} showStatusMessage={showStatusMessage}/>
-      <ClueList clues={clues} guessIndex={guessIndex} Colour={Colour} popAnim={popAnim}/>
+      <ClueList clues={clues} guessIndex={guessIndex} restartState={restartState} Colour={Colour} popAnim={popAnim}/>
       <Keyboard keys={keys} keySelected={keySelected} Colour={Colour} popAnim={popAnim} />
     </StyledDiv>
   )

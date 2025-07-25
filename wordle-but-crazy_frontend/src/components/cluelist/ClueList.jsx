@@ -57,13 +57,14 @@ const StyledClueLetter = styled.td`
   }
 `
 
-const ClueList = ({clues, guessIndex, Colour, popAnim}) => {
+const ClueList = ({clues, guessIndex, restartState, Colour, popAnim}) => {
   return(
     <StyledClueList>
       <tbody>
         {clues.map(clue => <ClueWord
           clue={clue}
           guessIndex={guessIndex}
+          restartState={restartState}
           Colour={Colour}
           StyledClueLetter={StyledClueLetter}
           popAnim={popAnim}

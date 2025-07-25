@@ -1,4 +1,14 @@
-const ClueLetter = ({letter, active, thisColour, Colour, StyledClueLetter, popAnim}) => {
+const ClueLetter = ({letter, active, thisColour, restartState, firstRow, index, Colour, StyledClueLetter, popAnim}) => {
+  const displayLetterBack = letter.toUpperCase()
+  let displayLetterFront = displayLetterBack
+
+  if (restartState.restarting) {
+    if (firstRow)
+      displayLetterFront = restartState.firstWord[index].toUpperCase()
+    else
+      displayLetterFront = ' '
+  }
+
   return(
     <StyledClueLetter
       $letter={letter}
@@ -6,12 +16,18 @@ const ClueLetter = ({letter, active, thisColour, Colour, StyledClueLetter, popAn
       $Colour={Colour}
       $popAnim={popAnim}
     >
-      <div className={active ? 'activeFlipper' : 'inactiveFlipper'}>
-        <div className={letter === ' ' ? 'blankFront' : 'filledFront'}>
-          <b>{letter.toUpperCase()}</b>
+      <div className={
+        restartState.restarting ? 'inactiveFlipper' : (
+          active ? 'activeFlipper' : 'inactiveFlipper'
+      )}>
+        <div className={
+          restartState.restarting ? 'blankFront' : (
+            letter === ' ' ? 'blankFront' : 'filledFront'
+        )}>
+          <b>{displayLetterFront}</b>
         </div>
         <div className='back'>
-          <b>{letter.toUpperCase()}</b>
+          <b>{displayLetterBack}</b>
         </div>
       </div>
     </StyledClueLetter>
