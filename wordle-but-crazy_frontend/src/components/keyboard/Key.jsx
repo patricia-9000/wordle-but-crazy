@@ -1,8 +1,10 @@
-const Key = ({k, keySelected, Colour, StyledKey}) => {
+const Key = ({k, keySelected, Colour, StyledKey, popAnim}) => {
   return (
-    <StyledKey className={k.colour ? 'highlighted' : 'default'}
+    <StyledKey
+      className={k.colour ? 'highlighted' : 'default'}
       $thisColour={k.colour}
       $Colour={Colour}
+      $popAnim={popAnim}
       onClick={() => keySelected(k.letter)}
     >
       <b>{k.letter.toUpperCase()}</b>

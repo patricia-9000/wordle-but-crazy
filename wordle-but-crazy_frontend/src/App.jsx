@@ -1,6 +1,6 @@
 import {useState, useEffect, useRef, useCallback} from 'react'
 import axios from 'axios'
-import styled from 'styled-components'
+import styled, {keyframes} from 'styled-components'
 
 import ClueList from './components/cluelist/ClueList'
 import Keyboard from './components/keyboard/Keyboard'
@@ -11,6 +11,20 @@ const StyledDiv = styled.div`
   text-align: center;
   width: max-content;
   margin: 100px auto;
+`
+
+const popAnim = keyframes`
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.1);
+  }
+
+  100% {
+    transform: scale(1);
+  }
 `
 
 const App = () => {
@@ -207,8 +221,8 @@ const App = () => {
   return (
     <StyledDiv>
       <StatusMessageLabel statusMessage={statusMessage}/>
-      <ClueList clues={clues} guessIndex={guessIndex} Colour={Colour}/>
-      <Keyboard keys={keys} keySelected={keySelected} Colour={Colour}/>
+      <ClueList clues={clues} guessIndex={guessIndex} Colour={Colour} popAnim={popAnim}/>
+      <Keyboard keys={keys} keySelected={keySelected} Colour={Colour} popAnim={popAnim} />
     </StyledDiv>
   )
 }

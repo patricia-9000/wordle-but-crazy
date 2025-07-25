@@ -1,10 +1,12 @@
-const ClueLetter = ({letter, currentGuess, thisColour, Colour, StyledClueLetter}) => {
+const ClueLetter = ({letter, currentGuess, thisColour, Colour, StyledClueLetter, popAnim}) => {
   return(
-    <StyledClueLetter className={letter === ' ' ? 'blank' : 'active'}
+    <StyledClueLetter
+      className={letter === ' ' ? 'blank' : 'active'}
       $letter={letter}
       $currentGuess={currentGuess}
       $thisColour={thisColour}
       $Colour={Colour}
+      $popAnim={popAnim}
     >
       <b>{letter.toUpperCase()}</b>
     </StyledClueLetter>

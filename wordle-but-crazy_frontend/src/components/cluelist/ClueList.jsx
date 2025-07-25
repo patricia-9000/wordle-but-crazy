@@ -1,4 +1,4 @@
-import styled, {keyframes} from 'styled-components'
+import styled from 'styled-components'
 
 import ClueWord from './ClueWord'
 
@@ -6,20 +6,6 @@ const StyledClueList = styled.table`
   margin: 0 auto;
   border-collapse: separate;
   border-spacing: 5px 6px;
-`
-
-const pop = keyframes`
-  0% {
-    transform: scale(1);
-  }
-
-  50% {
-    transform: scale(1.1);
-  }
-
-  100% {
-    transform: scale(1);
-  }
 `
 
 const StyledClueLetter = styled.td`
@@ -46,11 +32,11 @@ const StyledClueLetter = styled.td`
   }};
 
   &.active {
-    animation: ${pop} 0.05s linear 1;
+    animation: ${props => props.$popAnim} 0.05s linear 1;
   }
 `
 
-const ClueList = ({clues, guessIndex, Colour}) => {
+const ClueList = ({clues, guessIndex, Colour, popAnim}) => {
   return(
     <StyledClueList>
       <tbody>
@@ -59,6 +45,7 @@ const ClueList = ({clues, guessIndex, Colour}) => {
           guessIndex={guessIndex}
           Colour={Colour}
           StyledClueLetter={StyledClueLetter}
+          popAnim={popAnim}
           key={clue.number}
         />)}
       </tbody>

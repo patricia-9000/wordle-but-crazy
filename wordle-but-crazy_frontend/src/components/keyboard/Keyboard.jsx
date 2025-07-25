@@ -1,22 +1,8 @@
-import styled, {keyframes} from 'styled-components'
+import styled from 'styled-components'
 
 import Key from './Key'
 import EnterKey from './EnterKey'
 import BackspaceKey from './BackspaceKey'
-
-const pop = keyframes`
-  0% {
-    transform: scale(1);
-  }
-
-  50% {
-    transform: scale(1.1);
-  }
-
-  100% {
-    transform: scale(1);
-  }
-`
 
 const StyledKeyboard = styled.div`
   margin: 20px 0;
@@ -57,7 +43,7 @@ const StyledKey = styled.div`
   }
 
   &.highlighted {
-    animation: ${pop} 0.05s linear 1;
+    animation: ${props => props.$popAnim} 0.05s linear 1;
   }
 
   transition: all 50ms;
@@ -71,7 +57,7 @@ const StyledFunctionKey = styled(StyledKey)`
   border-color: ${props => props.$Colour.LightGrey};
 `
 
-const Keyboard = ({keys, keySelected, Colour}) => {
+const Keyboard = ({keys, keySelected, Colour, popAnim}) => {
   const row1 = keys.slice(0, 10)
   const row2 = keys.slice(10, 19)
   const row3 = keys.slice(19, 26)
@@ -84,6 +70,7 @@ const Keyboard = ({keys, keySelected, Colour}) => {
           keySelected={keySelected}
           Colour={Colour}
           StyledKey={StyledKey}
+          popAnim={popAnim}
           key={i}
         />)}
       </div>
@@ -93,6 +80,7 @@ const Keyboard = ({keys, keySelected, Colour}) => {
           keySelected={keySelected}
           Colour={Colour}
           StyledKey={StyledKey}
+          popAnim={popAnim}
           key={i}
         />)}
       </div>
@@ -107,6 +95,7 @@ const Keyboard = ({keys, keySelected, Colour}) => {
           keySelected={keySelected}
           Colour={Colour}
           StyledKey={StyledKey}
+          popAnim={popAnim}
           key={i}
         />)}
         <BackspaceKey

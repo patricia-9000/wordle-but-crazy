@@ -1,6 +1,6 @@
 import ClueLetter from './ClueLetter'
 
-const ClueWord = ({clue, guessIndex, Colour, StyledClueLetter}) => {
+const ClueWord = ({clue, guessIndex, Colour, StyledClueLetter, popAnim}) => {
   const word = clue.word.split('')
   const colours = clue.colours
   const currentGuess = clue.number === guessIndex
@@ -13,6 +13,7 @@ const ClueWord = ({clue, guessIndex, Colour, StyledClueLetter}) => {
         thisColour={colours[i]}
         Colour={Colour}
         StyledClueLetter={StyledClueLetter}
+        popAnim={popAnim}
         key={i}
       />)}
     </tr>
