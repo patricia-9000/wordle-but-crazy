@@ -19,7 +19,7 @@ const popAnim = keyframes`
   }
 
   50% {
-    transform: scale(1.1);
+    transform: scale(1.25);
   }
 
   100% {
