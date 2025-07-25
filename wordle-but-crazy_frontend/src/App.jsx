@@ -58,7 +58,7 @@ const App = () => {
   const keysRef = useRef({})
   keysRef.current = keys
 
-  const [guessingDisabled, setGuessingDisabled] = useState(false)
+  const [guessingDisabled, setGuessingDisabled] = useState(true)
   const guessingDisabledRef = useRef({})
   guessingDisabledRef.current = guessingDisabled
 
@@ -79,9 +79,11 @@ const App = () => {
       })
     }
 
-    setClues(blankClues)
     setGuess('')
     setGuessIndex(0)
+    setClues(blankClues)
+    setGuessingDisabled(false)
+    setStatusMessage('')
     const letters = 'qwertyuiopasdfghjklzxcvbnm'.split('')
     setKeys(letters.map(l => {return {
       letter: l,
@@ -123,8 +125,6 @@ const App = () => {
             setStatusMessage('Correct!')
             setGuessingDisabled(true)
             setTimeout(() => {
-              setStatusMessage('')
-              setGuessingDisabled(false)
               newGame()
             }, MESSAGE_TIME)
           }
@@ -158,8 +158,6 @@ const App = () => {
             setStatusMessage(`The correct answer was ${newClue.answer}`)
             setGuessingDisabled(true)
             setTimeout(() => {
-              setStatusMessage('')
-              setGuessingDisabled(false)
               newGame()
             }, MESSAGE_TIME)
           }
