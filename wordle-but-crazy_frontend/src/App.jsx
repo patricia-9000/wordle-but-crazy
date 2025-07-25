@@ -89,8 +89,8 @@ const App = () => {
   guessingDisabledRef.current = guessingDisabled
 
   const [statusMessage, setStatusMessage] = useState('')
-  const statusMessageRef = useRef({})
-  statusMessageRef.current = statusMessage
+
+  const [showStatusMessage, setShowStatusMessage] = useState(false)
 
   //Reset states and request new game from backend
   const newGame = () => {
@@ -99,7 +99,6 @@ const App = () => {
     setClues(generateBlankClues())
     setKeys(generateBlankKeys())
     setGuessingDisabled(false)
-    setStatusMessage('')
 
     axios
       .get(`${BASE_URL}/api/newgame`)
@@ -124,8 +123,10 @@ const App = () => {
         //Backend says guess isn't a real word
         if (newClue.wordWrong) {
           setStatusMessage('Not in word list')
+          setShowStatusMessage(true)
+
           setTimeout(() => {
-            setStatusMessage('')
+            setShowStatusMessage(false)
           }, MESSAGE_TIME)
         //Backend says guess is okay
         } else {
@@ -134,8 +135,11 @@ const App = () => {
           //End game after a pause if guessed word is correct
           if (newClue.correct) {
             setStatusMessage('Correct!')
+            setShowStatusMessage(true)
             setGuessingDisabled(true)
+
             setTimeout(() => {
+              setShowStatusMessage(false)
               newGame()
             }, MESSAGE_TIME)
           }
@@ -167,8 +171,11 @@ const App = () => {
           //End game after a pause if all guesses have been used
           if (guessIndexRef.current === 5 && !newClue.correct) {
             setStatusMessage(`The correct answer was ${newClue.answer}`)
+            setShowStatusMessage(true)
             setGuessingDisabled(true)
+
             setTimeout(() => {
+              setShowStatusMessage(false)
               newGame()
             }, MESSAGE_TIME)
           }
@@ -229,7 +236,7 @@ const App = () => {
   //Render app
   return (
     <StyledDiv>
-      <StatusMessageLabel statusMessage={statusMessage}/>
+      <StatusMessageLabel statusMessage={statusMessage} showStatusMessage={showStatusMessage}/>
       <ClueList clues={clues} guessIndex={guessIndex} Colour={Colour} popAnim={popAnim}/>
       <Keyboard keys={keys} keySelected={keySelected} Colour={Colour} popAnim={popAnim} />
     </StyledDiv>

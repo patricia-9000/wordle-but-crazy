@@ -8,18 +8,15 @@ const StyledDiv = styled.div`
   height: 23px;
   padding: 10px;
   border-radius: 10px;
-  background-color: ${props => {
-    if (props.$statusMessage === '')
-      return 'white'
-    else
-      return 'black'
-  }};
+  background-color: ${props => props.$showStatusMessage ? 'black' : 'white'};
   margin: 20px auto;
+
+  transition: all 100ms;
 `
 
-const StatusMessageLabel = ({statusMessage}) => {
+const StatusMessageLabel = ({statusMessage, showStatusMessage}) => {
   return (
-    <StyledDiv $statusMessage={statusMessage}>
+    <StyledDiv $showStatusMessage={showStatusMessage}>
       {statusMessage}
     </StyledDiv>
   )
