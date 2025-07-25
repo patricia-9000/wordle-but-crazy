@@ -9,30 +9,51 @@ const StyledClueList = styled.table`
 `
 
 const StyledClueLetter = styled.td`
-  font-size: 25pt;
-  user-select: none;
-  color: ${props => props.$currentGuess ? 'black' : 'white'};
-  width: 56px;
-  height: 56px;
-  background-color: ${props => {
-    if (props.$letter === ' ' || props.$currentGuess)
-      return 'white'
-    else
-      return props.$Colour[props.$thisColour]
-  }};
-  border-width: 2px;
-  border-style: solid;
-  border-color: ${props => {
-    if (props.$letter === ' ')
-      return props.$Colour.LightGrey
-    else if (props.$currentGuess)
-      return props.$Colour.Grey
-    else
-      return props.$Colour[props.$thisColour]
-  }};
+  perspective: 1000px;
 
-  &.active {
+  .inactiveFlipper, .activeFlipper {
+    transition: 500ms;
+    transform-style: preserve-3d;
+    display: grid;
+  }
+
+  .activeFlipper {
+    transform: rotateX(180deg);
+  }
+
+  .blankFront, .filledFront, .back {
+    font-size: 25pt;
+    line-height: 56px;
+    user-select: none;
+    width: 56px;
+    height: 56px;
+    border-width: 2px;
+    border-style: solid;
+
+    backface-visibility: hidden;
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .blankFront, .filledFront {
+    z-index: 2;
+    transform: rotateX(0deg);
+  }
+  
+  .blankFront {
+    border-color: ${props => props.$Colour.LightGrey};
+  }
+  
+  .filledFront {
+    border-color: ${props => props.$Colour.Grey};
     animation: ${props => props.$popAnim} 0.05s linear 1;
+  }
+
+  .back {
+    color: white;
+    background-color: ${props => props.$Colour[props.$thisColour]};
+    border-color: ${props => props.$Colour[props.$thisColour]};
+    transform: rotateX(180deg);
   }
 `
 

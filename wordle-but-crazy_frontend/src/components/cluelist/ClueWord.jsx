@@ -3,13 +3,13 @@ import ClueLetter from './ClueLetter'
 const ClueWord = ({clue, guessIndex, Colour, StyledClueLetter, popAnim}) => {
   const word = clue.word.split('')
   const colours = clue.colours
-  const currentGuess = clue.number === guessIndex
+  const active = guessIndex > clue.number
 
   return(
     <tr>
       {word.map((letter, i) => <ClueLetter
         letter={letter}
-        currentGuess={currentGuess}
+        active={active}
         thisColour={colours[i]}
         Colour={Colour}
         StyledClueLetter={StyledClueLetter}
