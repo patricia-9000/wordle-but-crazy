@@ -200,7 +200,7 @@ const App = () => {
           //Restart game after a pause if all guesses have been used
           if (guessIndexRef.current === 5 && !newClue.correct) {
             setAnswer(newClue.answer)
-            setStatusMessage(`The correct answer was ${newClue.answer}`)
+            setStatusMessage(`The correct answer was ${newClue.answer.toUpperCase()}`)
             setShowStatusMessage(true)
             setGuessingDisabled(true)
 
