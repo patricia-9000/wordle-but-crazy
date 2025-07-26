@@ -21,7 +21,7 @@ const ClueLetter = ({letter, active, thisColour, restartState, firstRow, index, 
           active ? 'activeFlipper' : 'inactiveFlipper'
       )}>
         <div className={
-          restartState.restarting ? 'blankFront' : (
+          restartState.restarting && !firstRow ? 'blankFront' : (
             letter === ' ' ? 'blankFront' : 'filledFront'
         )}>
           <b>{displayLetterFront}</b>

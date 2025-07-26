@@ -104,42 +104,34 @@ const App = () => {
 
   const [showStatusMessage, setShowStatusMessage] = useState(false)
 
-  //Reset states and request new game from backend
-  const newGame = () => {
-    setGuess('')
-    setGuessIndex(0)
-    setClues(generateBlankClues())
-    setKeys(generateBlankKeys())
-
-    setGuess(restartStateRef.current.firstWord)
-
-    axios
-      .get(`${BASE_URL}/api/newgame`)
-      .then(res => {
-        setGameId(res.data.id)
-        
-        //Submit the previous answer as the first guess if restarting from previous game
-        if (restartStateRef.current.restarting) {
-          let newRestartState = restartStateRef.current
-          newRestartState.restarting = false
-          setRestartState(newRestartState)
-
-          makeGuess(res.data.id)
-        }
-
-        setGuessingDisabled(false)
-      })
-  }
-
-  //Establish the restart state for transitioning into the next game, then start a new game
+  //Transition from finished game into new game
   const restartGame = () => {
     setRestartState({
       restarting: true,
       firstWord: answerRef.current
     })
 
+    setGuessIndex(0)
+    setKeys(generateBlankKeys())
+
     setTimeout(() => {
-      newGame()
+      setGuess(restartStateRef.current.firstWord)
+      let newClues = generateBlankClues()
+      newClues[0].word = restartStateRef.current.firstWord
+      setClues(newClues)
+
+      axios
+        .get(`${BASE_URL}/api/newgame`)
+        .then(res => {
+          setGameId(res.data.id)
+
+          let newRestartState = restartStateRef.current
+          newRestartState.restarting = false
+          setRestartState(newRestartState)
+
+          makeGuess(res.data.id)
+          setGuessingDisabled(false)
+        })
     }, 1000)
   }
 
@@ -268,7 +260,12 @@ const App = () => {
 
   //Start game immediately after initial render of app
   useEffect(() => {
-    newGame()
+    axios
+      .get(`${BASE_URL}/api/newgame`)
+      .then(res => {
+        setGameId(res.data.id)
+        setGuessingDisabled(false)
+      })
   }, [])
 
   //Render app
