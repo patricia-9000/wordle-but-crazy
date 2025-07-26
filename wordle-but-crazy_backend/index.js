@@ -28,16 +28,28 @@ const logGames = () => {
 
 //End game with given ID
 const endGame = id => {
-  activeGames = activeGames.filter(g => g.id !== id)
+  let newActiveGames = []
+  let gameExists = false
+
+  for (let i = 0; i < activeGames.length; i ++) {
+    if (activeGames[i].id !== id)
+      newActiveGames.push(activeGames[i])
+    else
+      gameExists = true
+  }
+
+  activeGames = newActiveGames
+  return gameExists
 }
 
 //Restart timeout of given game
 const restartTimeout = game => {
   clearTimeout(game.timeoutId)
   game.timeoutId = setTimeout(() => {
-    endGame(game.id)
-    console.log(`\nTimed out game with ID ${game.id}`)
-    logGames()
+    if (endGame(game.id)) {
+      console.log(`\nTimed out game with ID ${game.id}`)
+      logGames()
+    }
   }, 120000)
 }
 
