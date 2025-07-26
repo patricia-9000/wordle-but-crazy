@@ -107,12 +107,13 @@ const App = () => {
   //Stop game with given ID from timing out
   const preventTimeout = id => {
     setTimeout(() => {
-      axios
-        .get(`${BASE_URL}/api/preventtimeout/${id}`)
-        .then(res => {
-          if (id === gameIdRef.current)
+      if (id === gameIdRef.current) {
+        axios
+          .get(`${BASE_URL}/api/preventtimeout/${id}`)
+          .then(res => {
             preventTimeout(id)
-        })
+          })
+      }
     }, 60000)
   }
 
