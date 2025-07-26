@@ -104,6 +104,20 @@ const App = () => {
 
   const [showStatusMessage, setShowStatusMessage] = useState(false)
 
+  //Start new game
+  const newGame = () => {
+    axios
+      .get(`${BASE_URL}/api/newgame`)
+      .then(res => {
+        setGameId(res.data.id)
+        setGuess('')
+        setGuessIndex(0)
+        setClues(generateBlankClues())
+        setKeys(generateBlankKeys())
+        setGuessingDisabled(false)
+      })
+  }
+
   //Transition from finished game into new game
   const restartGame = () => {
     setRestartState({
@@ -260,12 +274,7 @@ const App = () => {
 
   //Start game immediately after initial render of app
   useEffect(() => {
-    axios
-      .get(`${BASE_URL}/api/newgame`)
-      .then(res => {
-        setGameId(res.data.id)
-        setGuessingDisabled(false)
-      })
+    newGame()
   }, [])
 
   //Render app
