@@ -8,6 +8,9 @@ app.use(cors())
 const fs = require('fs')
 const nthline = require('nthline')
 
+const morgan = require('morgan')
+app.use(morgan('tiny'))
+
 const FIVE_LETTER_WORDS = 5757
 const WORDS_FILEPATH = './WORDS'
 
@@ -23,7 +26,9 @@ let maxId = 0
 
 //Log active games
 const logGames = () => {
-  activeGames.forEach(g => console.log(`{ id: ${g.id}, targetWord: ${g.targetWord} }`))
+  console.log('[')
+  activeGames.forEach(g => console.log(`\t{ id: ${g.id}, targetWord: ${g.targetWord} }`))
+  console.log(']')
 }
 
 //End game with given ID
@@ -47,7 +52,7 @@ const restartTimeout = game => {
   clearTimeout(game.timeoutId)
   game.timeoutId = setTimeout(() => {
     if (endGame(game.id)) {
-      console.log(`\nTimed out game with ID ${game.id}`)
+      console.log(`Timed out game with ID ${game.id}`)
       logGames()
     }
   }, 120000)
@@ -69,7 +74,7 @@ app.get('/api/newgame', (req, res) => {
 
       activeGames.push(newGame)
       restartTimeout(newGame)
-      console.log(`\nStarted game with ID ${newGame.id}`)
+      console.log(`Started game with ID ${newGame.id}`)
       logGames()
 
       res.json({
@@ -144,7 +149,7 @@ app.post('/api/makeguess/:id', (req, res) => {
 
           //End current game
           endGame(id)
-          console.log(`\nGame with ID ${id} was won`)
+          console.log(`Game with ID ${id} was won`)
           logGames()
         //Whole word is not correct
         } else {
@@ -182,7 +187,7 @@ app.post('/api/makeguess/:id', (req, res) => {
           if (currentGame.guesses === 6) {
             newClue.answer = targetWord
             endGame(id)
-            console.log(`\nGame with ID ${id} was lost`)
+            console.log(`Game with ID ${id} was lost`)
             logGames()
           }
         }
