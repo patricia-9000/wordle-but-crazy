@@ -23,14 +23,22 @@ let maxId = 0
 
 //Log active games
 const logGames = () => {
-  console.log('')
-  activeGames.forEach(g => console.log(g))
+  activeGames.forEach(g => console.log(`{ id: ${g.id}, targetWord: ${g.targetWord} }`))
 }
 
 //End game with given ID
 const endGame = id => {
   activeGames = activeGames.filter(g => g.id !== id)
-  logGames()
+}
+
+//Restart timeout of given game
+const restartTimeout = game => {
+  clearTimeout(game.timeoutId)
+  game.timeoutId = setTimeout(() => {
+    endGame(game.id)
+    console.log(`\nTimed out game with ID ${game.id}`)
+    logGames()
+  }, 120000)
 }
 
 //Start new game
@@ -43,19 +51,34 @@ app.get('/api/newgame', (req, res) => {
       const newGame = {
         id: maxId++,
         targetWord: randomWord,
-        guesses: 0
+        guesses: 0,
+        timeoutId: null
       }
 
       activeGames.push(newGame)
+      restartTimeout(newGame)
+      console.log(`\nStarted game with ID ${newGame.id}`)
       logGames()
-
-      //Delete this game after 15 minutes
-      setTimeout(() => endGame(newGame.id), 900000)
 
       res.json({
         id: newGame.id
       })
     })
+})
+
+//Reset game's timeout
+app.get('/api/preventtimeout/:id', (req, res) => {
+  //Find client's game using their game ID
+  const id = parseInt(req.params.id)
+  const currentGame = activeGames.find(g => g.id === id)
+
+  //Return 404 if game can't be found
+  if (!currentGame)
+    res.status(404).end()
+  else {
+    restartTimeout(currentGame)
+    res.end()
+  }
 })
 
 //Handle incoming guessed word
@@ -69,6 +92,8 @@ app.post('/api/makeguess/:id', (req, res) => {
     res.status(404).end()
   //Proceed if game is found
   else {
+    restartTimeout(currentGame)
+
     const guess = req.body.word
 
     //Check if the guess is a real word
@@ -107,6 +132,8 @@ app.post('/api/makeguess/:id', (req, res) => {
 
           //End current game
           endGame(id)
+          console.log(`\nGame with ID ${id} was won`)
+          logGames()
         //Whole word is not correct
         } else {
           //Stop the same letter in the target word from flagging more than one letter in the guessed word
@@ -143,6 +170,8 @@ app.post('/api/makeguess/:id', (req, res) => {
           if (currentGame.guesses === 6) {
             newClue.answer = targetWord
             endGame(id)
+            console.log(`\nGame with ID ${id} was lost`)
+            logGames()
           }
         }
 

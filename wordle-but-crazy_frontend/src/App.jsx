@@ -104,6 +104,18 @@ const App = () => {
 
   const [showStatusMessage, setShowStatusMessage] = useState(false)
 
+  //Stop game with given ID from timing out
+  const preventTimeout = id => {
+    setTimeout(() => {
+      axios
+        .get(`${BASE_URL}/api/preventtimeout/${id}`)
+        .then(res => {
+          if (id === gameIdRef.current)
+            preventTimeout(id)
+        })
+    }, 60000)
+  }
+
   //Start new game
   const newGame = () => {
     axios
@@ -115,6 +127,8 @@ const App = () => {
         setClues(generateBlankClues())
         setKeys(generateBlankKeys())
         setGuessingDisabled(false)
+
+        preventTimeout(res.data.id)
       })
   }
 
@@ -145,6 +159,8 @@ const App = () => {
 
           makeGuess(res.data.id)
           setGuessingDisabled(false)
+
+          preventTimeout(res.data.id)
         })
     }, 1000)
   }
