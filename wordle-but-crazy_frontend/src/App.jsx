@@ -28,7 +28,6 @@ const popAnim = keyframes`
 `
 
 const App = () => {
-  const BASE_URL = 'http://localhost:3001'
   const MESSAGE_TIME = 2500
 
   const Colour = {
@@ -113,7 +112,7 @@ const App = () => {
     setTimeout(() => {
       if (id === gameIdRef.current) {
         axios
-          .get(`${BASE_URL}/api/preventtimeout/${id}`)
+          .get(`/api/preventtimeout/${id}`)
           .then(res => {
             preventTimeout(id)
           })
@@ -124,7 +123,7 @@ const App = () => {
   //Start new game
   const newGame = () => {
     axios
-      .get(`${BASE_URL}/api/newgame`)
+      .get('/api/newgame')
       .then(res => {
         setGameId(res.data.id)
         setGuess('')
@@ -154,7 +153,7 @@ const App = () => {
       setClues(newClues)
 
       axios
-        .get(`${BASE_URL}/api/newgame`)
+        .get('/api/newgame')
         .then(res => {
           setGameId(res.data.id)
 
@@ -192,7 +191,7 @@ const App = () => {
     let newClue = null
     
     axios
-      .post(`${BASE_URL}/api/makeguess/${id}`, newGuess)
+      .post(`/api/makeguess/${id}`, newGuess)
       .then(res => {
         newClue = res.data
         
