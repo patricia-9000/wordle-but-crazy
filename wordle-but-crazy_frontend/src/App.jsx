@@ -104,6 +104,10 @@ const App = () => {
 
   const [showMessage, setShowMessage] = useState(false)
 
+  const [messageTimeoutId, setMessageTimeoutId] = useState(null)
+  const messageTimeoutIdRef = useRef([])
+  messageTimeoutIdRef.current = messageTimeoutId
+
   //Stop game with given ID from timing out
   const preventTimeout = id => {
     setTimeout(() => {
@@ -166,6 +170,19 @@ const App = () => {
     }, 1000)
   }
 
+  const makeMessage = (msg, func) => {
+    setMessage(msg)
+    setShowMessage(true)
+    clearTimeout(messageTimeoutIdRef.current)
+
+    setMessageTimeoutId(setTimeout(() => {
+      setShowMessage(false)
+
+      if (func)
+        func.call()
+    }, MESSAGE_TIME))
+  }
+
   //Submit guesses to backend when 'make guess' button clicked
   const makeGuess = (id = gameIdRef.current) => {
     let newGuess = {
@@ -181,12 +198,7 @@ const App = () => {
         
         //Backend says guess isn't a real word
         if (newClue.wordWrong) {
-          setMessage('Not in word list')
-          setShowMessage(true)
-
-          setTimeout(() => {
-            setShowMessage(false)
-          }, MESSAGE_TIME)
+          makeMessage('Not in word list')
         //Backend says guess is okay
         } else {
           setGuessIndex(newClue.number + 1)
@@ -194,14 +206,8 @@ const App = () => {
           //Restart game after a pause if guessed word is correct
           if (newClue.correct) {
             setAnswer(newClue.word)
-            setMessage('Correct!')
-            setShowMessage(true)
             setGuessingDisabled(true)
-
-            setTimeout(() => {
-              setShowMessage(false)
-              restartGame()
-            }, MESSAGE_TIME)
+            makeMessage('Correct!', () => restartGame())
           }
 
           //Update keyboard
@@ -231,14 +237,8 @@ const App = () => {
           //Restart game after a pause if all guesses have been used
           if (guessIndexRef.current === 5 && !newClue.correct) {
             setAnswer(newClue.answer)
-            setMessage(`The correct answer was ${newClue.answer.toUpperCase()}`)
-            setShowMessage(true)
             setGuessingDisabled(true)
-
-            setTimeout(() => {
-              setShowMessage(false)
-              restartGame()
-            }, MESSAGE_TIME)
+            makeMessage(`The correct answer was ${newClue.answer.toUpperCase()}`, () => restartGame())
           }
         }
       })
