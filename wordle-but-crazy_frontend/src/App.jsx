@@ -248,6 +248,14 @@ const App = () => {
       })
   }
 
+  //Add given word to the clue list while typing guess
+  const updateClueList = newGuess => {
+    const displayedGuess = newGuess + ' '.repeat(5 - newGuess.length)
+    let newClues = cluesRef.current
+    newClues[guessIndexRef.current].word = displayedGuess
+    setClues(newClues)
+  }
+
   //Handle all key selections (both physical key presses and on-screen key clicks)
   const keySelected = key => {
     if (!guessingDisabledRef.current) {
@@ -260,17 +268,15 @@ const App = () => {
         if (key === 'Backspace') {
           newGuess = guessRef.current.substring(0, guessRef.current.length - 1)
           setGuess(newGuess)
+          updateClueList(newGuess)
         } else if (key.length === 1
           && /^[a-zA-Z]/.test(key)
-          && guessRef.current.length < 5) {
+          && guessRef.current.length < 5)
+        {
           newGuess = guessRef.current + key
           setGuess(newGuess)
+          updateClueList(newGuess)
         }
-
-        const displayedGuess = newGuess + ' '.repeat(5 - newGuess.length)
-        let newClues = cluesRef.current
-        newClues[guessIndexRef.current].word = displayedGuess
-        setClues(newClues)
       }
     }
   }
