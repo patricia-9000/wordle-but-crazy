@@ -105,8 +105,16 @@ const App = () => {
   const [showMessage, setShowMessage] = useState(false)
 
   const [messageTimeoutId, setMessageTimeoutId] = useState(null)
-  const messageTimeoutIdRef = useRef([])
+  const messageTimeoutIdRef = useRef({})
   messageTimeoutIdRef.current = messageTimeoutId
+
+  const [score, setScore] = useState(0)
+  const scoreRef = useRef({})
+  scoreRef.current = score
+
+  const [wordScore, setWordScore] = useState(0)
+  const wordScoreRef = useRef({})
+  wordScoreRef.current = wordScore
 
   //Stop game with given ID from timing out
   const preventTimeout = id => {
@@ -138,7 +146,7 @@ const App = () => {
   }
 
   //Transition from finished game into new game
-  const restartGame = () => {
+  const restartGame = won => {
     setRestartState({
       restarting: true,
       firstWord: answerRef.current
@@ -146,6 +154,11 @@ const App = () => {
 
     setGuessIndex(0)
     setKeys(generateBlankKeys())
+
+    //Calculate score
+    if (won)
+      setScore(scoreRef.current + (wordScoreRef.current * (5 - guessIndexRef.current)))
+    setWordScore(0)
 
     setTimeout(() => {
       setGuess(restartStateRef.current.firstWord)
@@ -207,7 +220,7 @@ const App = () => {
           if (newClue.correct) {
             setAnswer(newClue.word)
             setGuessingDisabled(true)
-            makeMessage('Correct!', () => restartGame())
+            makeMessage('Correct!', () => restartGame(true))
           }
 
           //Update keyboard
@@ -234,16 +247,30 @@ const App = () => {
 
           setGuess('')
 
+          //Update word score
+          let newWordScore = wordScoreRef.current
+
+          newClue.colours.forEach(c => {
+            if (c === 'Green')
+              newWordScore += 50
+            else if (c === 'Yellow') {
+              newWordScore += 10
+            }
+          })
+          
+          setWordScore(newWordScore)
+
           //Restart game after a pause if all guesses have been used
           if (guessIndexRef.current === 5 && !newClue.correct) {
             setAnswer(newClue.answer)
             setGuessingDisabled(true)
-            makeMessage(`The correct answer was ${newClue.answer.toUpperCase()}`, () => restartGame())
+            makeMessage(`The correct answer was ${newClue.answer.toUpperCase()}`, () => restartGame(false))
           }
         }
       })
       .catch(err => {
         alert('Session could not be found - fetching new session')
+        setWordScore(0)
         newGame()
       })
   }
@@ -306,6 +333,9 @@ const App = () => {
       <MessageLabel message={message} showMessage={showMessage}/>
       <ClueList clues={clues} guessIndex={guessIndex} restartState={restartState} Colour={Colour} popAnim={popAnim}/>
       <Keyboard keys={keys} keySelected={keySelected} Colour={Colour} popAnim={popAnim} />
+      <div>
+        {score} {wordScore}
+      </div>
     </StyledDiv>
   )
 }
