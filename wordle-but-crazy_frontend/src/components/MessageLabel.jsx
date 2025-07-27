@@ -8,18 +8,18 @@ const StyledDiv = styled.div`
   height: 23px;
   padding: 10px;
   border-radius: 10px;
-  background-color: ${props => props.$showStatusMessage ? 'black' : 'white'};
+  background-color: ${props => props.$showMessage ? 'black' : 'white'};
   margin: 20px auto;
 
   transition: all 100ms;
 `
 
-const StatusMessageLabel = ({statusMessage, showStatusMessage}) => {
+const MessageLabel = ({message, showMessage}) => {
   return (
-    <StyledDiv $showStatusMessage={showStatusMessage}>
-      {statusMessage}
+    <StyledDiv $showMessage={showMessage}>
+      {message}
     </StyledDiv>
   )
 }
 
-export default StatusMessageLabel
+export default MessageLabel

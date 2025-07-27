@@ -4,7 +4,7 @@ import styled, {keyframes} from 'styled-components'
 
 import ClueList from './components/cluelist/ClueList'
 import Keyboard from './components/keyboard/Keyboard'
-import StatusMessageLabel from './components/StatusMessageLabel'
+import MessageLabel from './components/MessageLabel'
 
 const StyledDiv = styled.div`
   font-family: sans-serif;
@@ -100,9 +100,9 @@ const App = () => {
   const restartStateRef = useRef({})
   restartStateRef.current = restartState
 
-  const [statusMessage, setStatusMessage] = useState('')
+  const [message, setMessage] = useState('')
 
-  const [showStatusMessage, setShowStatusMessage] = useState(false)
+  const [showMessage, setShowMessage] = useState(false)
 
   //Stop game with given ID from timing out
   const preventTimeout = id => {
@@ -181,11 +181,11 @@ const App = () => {
         
         //Backend says guess isn't a real word
         if (newClue.wordWrong) {
-          setStatusMessage('Not in word list')
-          setShowStatusMessage(true)
+          setMessage('Not in word list')
+          setShowMessage(true)
 
           setTimeout(() => {
-            setShowStatusMessage(false)
+            setShowMessage(false)
           }, MESSAGE_TIME)
         //Backend says guess is okay
         } else {
@@ -194,12 +194,12 @@ const App = () => {
           //Restart game after a pause if guessed word is correct
           if (newClue.correct) {
             setAnswer(newClue.word)
-            setStatusMessage('Correct!')
-            setShowStatusMessage(true)
+            setMessage('Correct!')
+            setShowMessage(true)
             setGuessingDisabled(true)
 
             setTimeout(() => {
-              setShowStatusMessage(false)
+              setShowMessage(false)
               restartGame()
             }, MESSAGE_TIME)
           }
@@ -231,12 +231,12 @@ const App = () => {
           //Restart game after a pause if all guesses have been used
           if (guessIndexRef.current === 5 && !newClue.correct) {
             setAnswer(newClue.answer)
-            setStatusMessage(`The correct answer was ${newClue.answer.toUpperCase()}`)
-            setShowStatusMessage(true)
+            setMessage(`The correct answer was ${newClue.answer.toUpperCase()}`)
+            setShowMessage(true)
             setGuessingDisabled(true)
 
             setTimeout(() => {
-              setShowStatusMessage(false)
+              setShowMessage(false)
               restartGame()
             }, MESSAGE_TIME)
           }
@@ -303,7 +303,7 @@ const App = () => {
   //Render app
   return (
     <StyledDiv>
-      <StatusMessageLabel statusMessage={statusMessage} showStatusMessage={showStatusMessage}/>
+      <MessageLabel message={message} showMessage={showMessage}/>
       <ClueList clues={clues} guessIndex={guessIndex} restartState={restartState} Colour={Colour} popAnim={popAnim}/>
       <Keyboard keys={keys} keySelected={keySelected} Colour={Colour} popAnim={popAnim} />
     </StyledDiv>
