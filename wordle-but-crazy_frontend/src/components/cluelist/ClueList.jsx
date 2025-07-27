@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import ClueWord from './ClueWord'
 
 const StyledClueList = styled.table`
-  margin: 0 auto;
+  margin: 20px auto;
   border-collapse: separate;
   border-spacing: 5px 6px;
 `

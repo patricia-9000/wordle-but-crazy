@@ -4,10 +4,6 @@ import Key from './Key'
 import EnterKey from './EnterKey'
 import BackspaceKey from './BackspaceKey'
 
-const StyledKeyboard = styled.div`
-  margin: 20px 0;
-`
-
 const StyledKey = styled.div`
   cursor: pointer;
   font-size: 15pt;
@@ -63,7 +59,7 @@ const Keyboard = ({keys, keySelected, Colour, popAnim}) => {
   const row3 = keys.slice(19, 26)
 
   return (
-    <StyledKeyboard>
+    <div>
       <div>
         {row1.map((k, i) => <Key
           k={k}
@@ -104,7 +100,7 @@ const Keyboard = ({keys, keySelected, Colour, popAnim}) => {
           StyledFunctionKey={StyledFunctionKey}
         />
       </div>
-    </StyledKeyboard>
+    </div>
   )
 }
 

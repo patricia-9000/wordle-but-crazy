@@ -9,7 +9,7 @@ const StyledDiv = styled.div`
   padding: 10px;
   border-radius: 10px;
   background-color: ${props => props.$showMessage ? 'black' : 'white'};
-  margin: 20px auto;
+  margin: 0 auto;
 
   transition: all 100ms;
 `

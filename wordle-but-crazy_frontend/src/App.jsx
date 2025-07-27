@@ -10,7 +10,8 @@ const StyledDiv = styled.div`
   font-family: sans-serif;
   text-align: center;
   width: max-content;
-  margin: 100px auto;
+  padding: 25px 25px;
+  margin: 50px auto;
 `
 
 const popAnim = keyframes`
