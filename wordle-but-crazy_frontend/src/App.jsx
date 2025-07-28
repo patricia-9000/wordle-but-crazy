@@ -31,8 +31,6 @@ const popAnim = keyframes`
 `
 
 const App = () => {
-  const MESSAGE_TIME = 2500
-
   const Colour = {
     LightGrey: '#D3D6DA',
     Grey: '#787C7E',
@@ -148,19 +146,14 @@ const App = () => {
   }
 
   //Transition from finished game into new game
-  const restartGame = won => {
+  const restartGame = () => {
     setRestartState({
       restarting: true,
       firstWord: answerRef.current
     })
 
     setGuessIndex(0)
-    setKeys(generateBlankKeys())
-
-    //Calculate score
-    if (won)
-      setScore(scoreRef.current + (wordScoreRef.current * (7 - guessIndexRef.current)))
-    setWordScore(0)
+    setKeys(generateBlankKeys())      
 
     setTimeout(() => {
       setGuess(restartStateRef.current.firstWord)
@@ -185,17 +178,30 @@ const App = () => {
     }, 1000)
   }
 
-  const makeMessage = (msg, func) => {
+  //Multiply word score based on number of unused guesses and add to overall score
+  const finalizeScore = won => {
+    if (won) {
+      setWordScore(wordScoreRef.current * (7 - guessIndexRef.current))
+
+      setTimeout(() => {
+        setScore(scoreRef.current + wordScoreRef.current)
+        setWordScore(0)
+        setTimeout(() => restartGame(), 1500)
+      }, 1500)
+    } else {
+      setWordScore(0)
+      setTimeout(() => restartGame(), 1500)
+    }
+  }
+
+  const makeMessage = msg => {
     setMessage(msg)
     setShowMessage(true)
     clearTimeout(messageTimeoutIdRef.current)
 
     setMessageTimeoutId(setTimeout(() => {
       setShowMessage(false)
-
-      if (func)
-        func.call()
-    }, MESSAGE_TIME))
+    }, 2500))
   }
 
   //Submit guesses to backend when 'make guess' button clicked
@@ -222,7 +228,11 @@ const App = () => {
           if (newClue.correct) {
             setAnswer(newClue.word)
             setGuessingDisabled(true)
-            makeMessage('Correct!', () => restartGame(true))
+            makeMessage('Correct!')
+
+            setTimeout(() => {
+              finalizeScore(true)
+            }, 1500)
           }
 
           //Update keyboard
@@ -266,7 +276,11 @@ const App = () => {
           if (guessIndexRef.current === 5 && !newClue.correct) {
             setAnswer(newClue.answer)
             setGuessingDisabled(true)
-            makeMessage(`The correct answer was ${newClue.answer.toUpperCase()}`, () => restartGame(false))
+            makeMessage(`The correct answer was ${newClue.answer.toUpperCase()}`)
+
+            setTimeout(() => {
+              finalizeScore(false)
+            }, 1500)
           }
         }
       })
