@@ -4,8 +4,7 @@ const StyledDiv = styled.div`
   text-align: right;
   user-select: none;
   position: absolute;
-  inset-inline-end: 50px;
-  inset-block-start: 50px;
+  right: 0;
 
   .scoreDisplay {
     margin: 25px;

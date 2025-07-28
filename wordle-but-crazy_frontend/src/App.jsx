@@ -10,9 +10,10 @@ import ScoreDisplay from './components/ScoreDisplay'
 const StyledDiv = styled.div`
   font-family: sans-serif;
   text-align: center;
-  width: max-content;
+  width: 800px;
   padding: 25px 25px;
   margin: 50px auto;
+  position: relative;
 `
 
 const popAnim = keyframes`
