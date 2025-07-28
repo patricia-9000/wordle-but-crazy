@@ -6,6 +6,7 @@ import ClueList from './components/cluelist/ClueList'
 import Keyboard from './components/keyboard/Keyboard'
 import MessageLabel from './components/MessageLabel'
 import ScoreDisplay from './components/ScoreDisplay'
+import GithubLink from './components/GithubLink'
 
 const StyledDiv = styled.div`
   font-family: sans-serif;
@@ -345,12 +346,15 @@ const App = () => {
 
   //Render app
   return (
-    <StyledDiv>
-      <ScoreDisplay score={score} wordScore={wordScore} />
-      <MessageLabel message={message} showMessage={showMessage}/>
-      <ClueList clues={clues} guessIndex={guessIndex} restartState={restartState} Colour={Colour} popAnim={popAnim}/>
-      <Keyboard keys={keys} keySelected={keySelected} Colour={Colour} popAnim={popAnim}/>
-    </StyledDiv>
+    <div>
+      <StyledDiv>
+        <ScoreDisplay score={score} wordScore={wordScore} />
+        <MessageLabel message={message} showMessage={showMessage}/>
+        <ClueList clues={clues} guessIndex={guessIndex} restartState={restartState} Colour={Colour} popAnim={popAnim}/>
+        <Keyboard keys={keys} keySelected={keySelected} Colour={Colour} popAnim={popAnim}/>
+      </StyledDiv>
+      <GithubLink/>
+    </div>
   )
 }
 
