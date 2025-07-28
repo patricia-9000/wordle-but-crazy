@@ -11,29 +11,49 @@ const StyledDiv = styled.div`
     margin: 25px;
   }
 
-  .number {
+  @property --num {
+    syntax: "<integer>";
+    initial-value: 0;
+    inherits: false;
+  }
+
+  .score, .wordScore {
     font-size: 30pt;
+
+    transition: --num 0.5s;
+    counter-set: num var(--num);
+  }
+
+  .score {
+    --num: ${props => props.$score};
+  }
+
+  .wordScore {
+    --num: ${props => props.$wordScore};
+  }
+
+  .score::after, .wordScore::after {
+    content: counter(num);
   }
 `
 
 const ScoreDisplay = ({score, wordScore}) => {
   return (
-    <StyledDiv>
+    <StyledDiv
+      $score={score}
+      $wordScore={wordScore}
+    >
       <div className='scoreDisplay'>
         <div>
           <b>Score</b>
         </div>
-        <div className='number'>
-          <b>{score}</b>
-        </div>
+        <b className='score'/>
       </div>
       <div className='scoreDisplay'>
         <div>
           <b>Word Score</b>
         </div>
-        <div className='number'>
-          <b>{wordScore}</b>
-        </div>
+        <b className='wordScore'/>
       </div>
     </StyledDiv>
   )
