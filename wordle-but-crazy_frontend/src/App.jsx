@@ -159,7 +159,7 @@ const App = () => {
 
     //Calculate score
     if (won)
-      setScore(scoreRef.current + (wordScoreRef.current * (5 - guessIndexRef.current)))
+      setScore(scoreRef.current + (wordScoreRef.current * (7 - guessIndexRef.current)))
     setWordScore(0)
 
     setTimeout(() => {
