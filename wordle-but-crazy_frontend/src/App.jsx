@@ -124,6 +124,8 @@ const App = () => {
   const showPointsTimeoutIdRef = useRef({})
   showPointsTimeoutIdRef.current = showPointsTimeoutId
 
+  const [showScoreMult, setShowScoreMult] = useState(false)
+
   //Stop game with given ID from timing out
   const preventTimeout = id => {
     setTimeout(() => {
@@ -190,9 +192,11 @@ const App = () => {
   const finalizeScore = won => {
     if (won) {
       setWordScore(wordScoreRef.current * (7 - guessIndexRef.current))
+      setShowScoreMult(true)
 
       setTimeout(() => {
         setScore(scoreRef.current + wordScoreRef.current)
+        setShowScoreMult(false)
         setWordScore(0)
         setTimeout(() => restartGame(), 1500)
       }, 1500)
@@ -368,6 +372,7 @@ const App = () => {
           clues={clues}
           guessIndex={guessIndex}
           showPoints={showPoints}
+          showScoreMult={showScoreMult}
           popAnim={popAnim}
           Colour={Colour}
         />
