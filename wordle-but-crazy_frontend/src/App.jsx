@@ -190,16 +190,28 @@ const App = () => {
 
   //Multiply word score based on number of unused guesses and add to overall score
   const finalizeScore = won => {
+    //Add to overall score if game was won
     if (won) {
-      setWordScore(wordScoreRef.current * (Math.max(1, 2 ** (6 - guessIndexRef.current))))
-      setShowScoreMult(true)
+      const linesLeft = 6 - guessIndexRef.current
 
-      setTimeout(() => {
+      //Do multiplication if there were unused guesses
+      if (linesLeft !== 0) {
+        setWordScore(wordScoreRef.current * (2 ** linesLeft))
+        setShowScoreMult(true)
+
+        setTimeout(() => {
+          setScore(scoreRef.current + wordScoreRef.current)
+          setShowScoreMult(false)
+          setWordScore(0)
+          setTimeout(() => restartGame(), 1500)
+        }, 1500)
+      //Don't do multiplication if all guesses used
+      } else {
         setScore(scoreRef.current + wordScoreRef.current)
-        setShowScoreMult(false)
         setWordScore(0)
         setTimeout(() => restartGame(), 1500)
-      }, 1500)
+      }
+    //Move straight to next game if game was lost
     } else {
       setWordScore(0)
       setTimeout(() => restartGame(), 1500)

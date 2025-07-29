@@ -95,20 +95,18 @@ const ScoreCalc = ({clues, guessIndex, showPoints, showScoreMult, popAnim, Colou
   } else {
     const linesLeft = 6 - guessIndex
 
-    if (linesLeft !== 0) {
-      return (
-        <ScoreMult
-          $popAnim={popAnim}
-        >
-          <div className='multiplier'>
-            <b>x{2 ** linesLeft}</b>
-          </div>
-          <div className='linesLeft'>
-            <b>{linesLeft} line{linesLeft === 1 ? '' : 's'} left</b>
-          </div>
-        </ScoreMult>
-      )
-    }
+    return (
+      <ScoreMult
+        $popAnim={popAnim}
+      >
+        <div className='multiplier'>
+          <b>x{2 ** linesLeft}</b>
+        </div>
+        <div className='linesLeft'>
+          <b>{linesLeft} line{linesLeft === 1 ? '' : 's'} left</b>
+        </div>
+      </ScoreMult>
+    )
   }
 }
 
