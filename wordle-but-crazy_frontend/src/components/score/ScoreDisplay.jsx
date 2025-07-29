@@ -4,8 +4,16 @@ const StyledDiv = styled.div`
   text-align: right;
   user-select: none;
 
-  .scoreDisplay {
+  .scoreDisplay, .hiddenScoreDisplay {
     margin: 25px;
+  }
+
+  .hiddenScoreDisplay {
+    visibility: hidden;
+  }
+
+  .scoreDisplay {
+    animation: ${props => props.$popAnim} 0.05s linear 1;
   }
 
   @property --num {
@@ -34,19 +42,20 @@ const StyledDiv = styled.div`
   }
 `
 
-const ScoreDisplay = ({score, wordScore}) => {
+const ScoreDisplay = ({score, wordScore, popAnim}) => {
   return (
     <StyledDiv
       $score={score}
       $wordScore={wordScore}
+      $popAnim={popAnim}
     >
-      <div className='scoreDisplay'>
+      <div className={score !== 0 ? 'scoreDisplay' : 'hiddenScoreDisplay'}>
         <div>
           <b>Score</b>
         </div>
         <b className='score'/>
       </div>
-      <div className='scoreDisplay'>
+      <div className={wordScore !== 0 || score !== 0 ? 'scoreDisplay' : 'hiddenScoreDisplay'}>
         <div>
           <b>Round Score</b>
         </div>

@@ -12,7 +12,7 @@ const StyledDiv = styled.div`
 const ScoreSidebar = ({score, wordScore, clues, guessIndex, showPoints, popAnim, Colour}) => {
   return (
     <StyledDiv>
-      <ScoreDisplay score={score} wordScore={wordScore}/>
+      <ScoreDisplay score={score} wordScore={wordScore} popAnim={popAnim}/>
       <ScoreCalc clues={clues} guessIndex={guessIndex} showPoints={showPoints} popAnim={popAnim} Colour={Colour}/>
     </StyledDiv>
   )
