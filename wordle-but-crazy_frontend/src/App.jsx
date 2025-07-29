@@ -5,7 +5,7 @@ import styled, {keyframes} from 'styled-components'
 import ClueList from './components/cluelist/ClueList'
 import Keyboard from './components/keyboard/Keyboard'
 import MessageLabel from './components/MessageLabel'
-import ScoreDisplay from './components/ScoreDisplay'
+import ScoreSidebar from './components/score/ScoreSidebar'
 import GithubLink from './components/GithubLink'
 
 const StyledDiv = styled.div`
@@ -348,7 +348,7 @@ const App = () => {
   return (
     <div>
       <StyledDiv>
-        <ScoreDisplay score={score} wordScore={wordScore} />
+        <ScoreSidebar score={score} wordScore={wordScore} clues={clues} guessIndex={guessIndex} Colour={Colour}/>
         <MessageLabel message={message} showMessage={showMessage}/>
         <ClueList clues={clues} guessIndex={guessIndex} restartState={restartState} Colour={Colour} popAnim={popAnim}/>
         <Keyboard keys={keys} keySelected={keySelected} Colour={Colour} popAnim={popAnim}/>

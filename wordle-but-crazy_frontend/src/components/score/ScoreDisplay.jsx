@@ -1,10 +1,8 @@
-import styled from "styled-components"
+import styled from 'styled-components'
 
 const StyledDiv = styled.div`
   text-align: right;
   user-select: none;
-  position: absolute;
-  right: 0;
 
   .scoreDisplay {
     margin: 25px;
@@ -50,7 +48,7 @@ const ScoreDisplay = ({score, wordScore}) => {
       </div>
       <div className='scoreDisplay'>
         <div>
-          <b>Word Score</b>
+          <b>Round Score</b>
         </div>
         <b className='wordScore'/>
       </div>
