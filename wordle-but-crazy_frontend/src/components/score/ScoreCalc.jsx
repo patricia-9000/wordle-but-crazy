@@ -101,7 +101,7 @@ const ScoreCalc = ({clues, guessIndex, showPoints, showScoreMult, popAnim, Colou
           $popAnim={popAnim}
         >
           <div className='multiplier'>
-            <b>x{7 - guessIndex}</b>
+            <b>x{2 ** linesLeft}</b>
           </div>
           <div className='linesLeft'>
             <b>{linesLeft} line{linesLeft === 1 ? '' : 's'} left</b>

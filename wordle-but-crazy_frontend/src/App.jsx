@@ -191,7 +191,7 @@ const App = () => {
   //Multiply word score based on number of unused guesses and add to overall score
   const finalizeScore = won => {
     if (won) {
-      setWordScore(wordScoreRef.current * (7 - guessIndexRef.current))
+      setWordScore(wordScoreRef.current * (Math.max(1, 2 ** (6 - guessIndexRef.current))))
       setShowScoreMult(true)
 
       setTimeout(() => {
