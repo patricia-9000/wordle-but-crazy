@@ -8,7 +8,6 @@ const StyledKey = styled.div`
   cursor: pointer;
   font-size: 15pt;
   line-height: 54px;
-  user-select: none;
   color: ${props => props.$thisColour ? 'white' : 'black'};
   width: 39px;
   height: 54px;

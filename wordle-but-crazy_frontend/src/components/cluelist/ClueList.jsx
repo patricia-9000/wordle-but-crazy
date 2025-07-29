@@ -24,7 +24,6 @@ const StyledClueLetter = styled.td`
   .blankFront, .filledFront, .back {
     font-size: 25pt;
     line-height: 56px;
-    user-select: none;
     width: 56px;
     height: 56px;
     border-width: 2px;

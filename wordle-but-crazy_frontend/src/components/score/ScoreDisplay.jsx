@@ -2,7 +2,6 @@ import styled from 'styled-components'
 
 const StyledDiv = styled.div`
   text-align: right;
-  user-select: none;
 
   .scoreDisplay, .hiddenScoreDisplay {
     margin: 25px;
