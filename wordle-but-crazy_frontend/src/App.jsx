@@ -302,7 +302,7 @@ const App = () => {
           clearTimeout(showPointsTimeoutIdRef.current)
           setShowPointsTimeoutId(setTimeout(() => {
             setShowPoints(false)
-          }, 2500))
+          }, 1000))
 
           //Restart game after a pause if all guesses have been used
           if (guessIndexRef.current === 5 && !newClue.correct) {

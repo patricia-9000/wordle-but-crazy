@@ -3,7 +3,7 @@ import styled from 'styled-components'
 const StyledDiv = styled.div`
   text-align: right;
 
-  .scoreDisplay, .hiddenScoreDisplay {
+  .scoreDisplay, .hiddenScoreDisplay, .popScoreDisplay {
     margin: 25px;
   }
 
@@ -11,7 +11,7 @@ const StyledDiv = styled.div`
     visibility: hidden;
   }
 
-  .scoreDisplay {
+  .popScoreDisplay {
     animation: ${props => props.$popAnim} 0.05s linear 1;
   }
 
@@ -41,20 +41,35 @@ const StyledDiv = styled.div`
   }
 `
 
-const ScoreDisplay = ({score, wordScore, popAnim}) => {
+const ScoreDisplay = ({score, wordScore, showPoints, showScoreMult, popAnim}) => {
+  let scoreClassName = 'hiddenScoreDisplay'
+  let wordScoreClassName = 'hiddenScoreDisplay'
+
+  if (score !== 0) {
+    scoreClassName = 'scoreDisplay'
+    wordScoreClassName = 'scoreDisplay'
+
+    if (!showScoreMult)
+      scoreClassName = 'popScoreDisplay'
+  } else if (wordScore !== 0)
+    wordScoreClassName = 'scoreDisplay'
+  
+  if (showPoints || showScoreMult)
+    wordScoreClassName = 'popScoreDisplay'
+  
   return (
     <StyledDiv
       $score={score}
       $wordScore={wordScore}
       $popAnim={popAnim}
     >
-      <div className={score !== 0 ? 'scoreDisplay' : 'hiddenScoreDisplay'}>
+      <div className={scoreClassName}>
         <div>
           <b>Score</b>
         </div>
         <b className='score'/>
       </div>
-      <div className={wordScore !== 0 || score !== 0 ? 'scoreDisplay' : 'hiddenScoreDisplay'}>
+      <div className={wordScoreClassName}>
         <div>
           <b>Round Score</b>
         </div>
