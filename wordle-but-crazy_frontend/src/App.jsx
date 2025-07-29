@@ -266,7 +266,7 @@ const App = () => {
             for (let j = 0; j < 26; j ++) {
               if (newKeys[j].letter === newClue.word[i]) {
                 //Don't change key's colour if it's already green
-                console.log(newKeys[j].colour)
+                
                 if (newKeys[j].colour !== 'Green') {
                   newKeys[j].colour = newClue.colours[i]
                 }
