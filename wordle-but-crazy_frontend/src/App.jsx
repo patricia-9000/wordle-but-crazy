@@ -299,7 +299,7 @@ const App = () => {
 
           //Tell the score display to show the score calculation breifly
           setShowPoints(true)
-          preventTimeout(showPointsTimeoutId)
+          clearTimeout(showPointsTimeoutIdRef.current)
           setShowPointsTimeoutId(setTimeout(() => {
             setShowPoints(false)
           }, 2500))
