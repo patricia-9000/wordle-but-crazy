@@ -117,6 +117,12 @@ const App = () => {
   const wordScoreRef = useRef({})
   wordScoreRef.current = wordScore
 
+  const [showPoints, setShowPoints] = useState(false)
+
+  const [showPointsTimeoutId, setShowPointsTimeoutId] = useState(null)
+  const showPointsTimeoutIdRef = useRef({})
+  showPointsTimeoutIdRef.current = showPointsTimeoutId
+
   //Stop game with given ID from timing out
   const preventTimeout = id => {
     setTimeout(() => {
@@ -273,6 +279,13 @@ const App = () => {
           
           setWordScore(newWordScore)
 
+          //Tell the score display to show the score calculation breifly
+          setShowPoints(true)
+          preventTimeout(showPointsTimeoutId)
+          setShowPointsTimeoutId(setTimeout(() => {
+            setShowPoints(false)
+          }, 2500))
+
           //Restart game after a pause if all guesses have been used
           if (guessIndexRef.current === 5 && !newClue.correct) {
             setAnswer(newClue.answer)
@@ -348,10 +361,32 @@ const App = () => {
   return (
     <div>
       <StyledDiv>
-        <ScoreSidebar score={score} wordScore={wordScore} clues={clues} guessIndex={guessIndex} Colour={Colour}/>
-        <MessageLabel message={message} showMessage={showMessage}/>
-        <ClueList clues={clues} guessIndex={guessIndex} restartState={restartState} Colour={Colour} popAnim={popAnim}/>
-        <Keyboard keys={keys} keySelected={keySelected} Colour={Colour} popAnim={popAnim}/>
+        <ScoreSidebar 
+          score={score}
+          wordScore={wordScore}
+          clues={clues}
+          guessIndex={guessIndex}
+          showPoints={showPoints}
+          popAnim={popAnim}
+          Colour={Colour}
+        />
+        <MessageLabel
+          message={message}
+          showMessage={showMessage}
+        />
+        <ClueList
+          clues={clues}
+          guessIndex={guessIndex}
+          restartState={restartState}
+          Colour={Colour}
+          popAnim={popAnim}
+        />
+        <Keyboard
+          keys={keys}
+          keySelected={keySelected}
+          Colour={Colour}
+          popAnim={popAnim}
+        />
       </StyledDiv>
       <GithubLink/>
     </div>

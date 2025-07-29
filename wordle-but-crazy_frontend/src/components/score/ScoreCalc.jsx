@@ -19,9 +19,19 @@ const TileScore = styled.div`
     height: 40px;
     background-color: ${props => props.$Colour[props.$thisColour]};
   }
+
+  &.showPoints {
+    animation: ${props => props.$popAnim} 0.05s linear 1;
+  }
+
+  &.hidePoints {
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 0s 1s, opacity 1s ease-in;
+  }
 `
 
-const ScoreCalc = ({clues, guessIndex, Colour}) => {
+const ScoreCalc = ({clues, guessIndex, showPoints, popAnim, Colour}) => {
   let scoredTiles = []
 
   if (guessIndex > 0) {
@@ -46,13 +56,15 @@ const ScoreCalc = ({clues, guessIndex, Colour}) => {
       }
     }
   }
-  
+
   return (
     <div>
       {scoredTiles.map((t, i) => 
       <TileScore
+        className={showPoints ? 'showPoints' : 'hidePoints'}
         $thisColour={t.colour}
         $Colour={Colour}
+        $popAnim={popAnim}
         key={i}
       >
         <div className='points'>
