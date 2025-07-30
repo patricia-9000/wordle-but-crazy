@@ -118,6 +118,8 @@ const App = () => {
   const wordScoreRef = useRef({})
   wordScoreRef.current = wordScore
 
+  const [showWordScore, setShowWordScore] = useState(false)
+
   const [showPoints, setShowPoints] = useState(false)
 
   const [showPointsTimeoutId, setShowPointsTimeoutId] = useState(null)
@@ -296,6 +298,9 @@ const App = () => {
           })
           
           setWordScore(newWordScore)
+          
+          if (newWordScore > 0)
+            setShowWordScore(true)
 
           //Tell the score display to show the score calculation breifly
           setShowPoints(true)
@@ -384,6 +389,7 @@ const App = () => {
           wordScore={wordScore}
           clues={clues}
           guessIndex={guessIndex}
+          showWordScore={showWordScore}
           showPoints={showPoints}
           showScoreMult={showScoreMult}
           popAnim={popAnim}

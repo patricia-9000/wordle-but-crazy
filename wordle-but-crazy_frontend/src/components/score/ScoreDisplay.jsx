@@ -41,21 +41,23 @@ const StyledDiv = styled.div`
   }
 `
 
-const ScoreDisplay = ({score, wordScore, showPoints, showScoreMult, popAnim}) => {
+const ScoreDisplay = ({score, wordScore, showWordScore, showPoints, showScoreMult, popAnim}) => {
   let scoreClassName = 'hiddenScoreDisplay'
   let wordScoreClassName = 'hiddenScoreDisplay'
 
+  if (showWordScore) {
+    wordScoreClassName = 'scoreDisplay'
+
+    if (showPoints || showScoreMult)
+      wordScoreClassName = 'popScoreDisplay'
+  }
+
   if (score !== 0) {
     scoreClassName = 'scoreDisplay'
-    wordScoreClassName = 'scoreDisplay'
 
     if (!showScoreMult)
       scoreClassName = 'popScoreDisplay'
-  } else if (wordScore !== 0)
-    wordScoreClassName = 'scoreDisplay'
-  
-  if (showPoints || showScoreMult)
-    wordScoreClassName = 'popScoreDisplay'
+  }
   
   return (
     <StyledDiv
