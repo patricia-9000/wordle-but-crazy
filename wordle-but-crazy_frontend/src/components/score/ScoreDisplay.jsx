@@ -21,28 +21,23 @@ const StyledDiv = styled.div`
     inherits: false;
   }
 
-  .score, .wordScore {
+  .highScore, .wordScore {
     font-size: 30pt;
-
-    transition: --num 0.5s;
-    counter-set: num var(--num);
-  }
-
-  .score {
-    --num: ${props => props.$score};
   }
 
   .wordScore {
     --num: ${props => props.$wordScore};
+    transition: --num 0.5s;
+    counter-set: num var(--num);
   }
 
-  .score::after, .wordScore::after {
+  .wordScore::after {
     content: counter(num);
   }
 `
 
-const ScoreDisplay = ({score, wordScore, showWordScore, showPoints, showScoreMult, popAnim}) => {
-  let scoreClassName = 'hiddenScoreDisplay'
+const ScoreDisplay = ({highScore, wordScore, showWordScore, showPoints, showScoreMult, highScoreUpdated, popAnim}) => {
+  let highScoreClassName = 'hiddenScoreDisplay'
   let wordScoreClassName = 'hiddenScoreDisplay'
 
   if (showWordScore) {
@@ -52,28 +47,28 @@ const ScoreDisplay = ({score, wordScore, showWordScore, showPoints, showScoreMul
       wordScoreClassName = 'popScoreDisplay'
   }
 
-  if (score !== 0) {
-    scoreClassName = 'scoreDisplay'
+  if (highScore !== 0) {
+    highScoreClassName = 'scoreDisplay'
 
-    if (!showScoreMult)
-      scoreClassName = 'popScoreDisplay'
+    if (highScoreUpdated)
+      highScoreClassName = 'popScoreDisplay'
   }
   
   return (
     <StyledDiv
-      $score={score}
+      $highScore={highScore}
       $wordScore={wordScore}
       $popAnim={popAnim}
     >
-      <div className={scoreClassName}>
+      <div className={highScoreClassName}>
         <div>
-          <b>Score</b>
+          <b>High Score</b>
         </div>
-        <b className='score'/>
+        <b className='highScore'>{highScore}</b>
       </div>
       <div className={wordScoreClassName}>
         <div>
-          <b>Round Score</b>
+          <b>Score</b>
         </div>
         <b className='wordScore'/>
       </div>

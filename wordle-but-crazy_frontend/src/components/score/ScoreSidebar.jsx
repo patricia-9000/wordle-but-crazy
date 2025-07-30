@@ -9,15 +9,16 @@ const StyledDiv = styled.div`
   right: 0;
 `
 
-const ScoreSidebar = ({score, wordScore, clues, guessIndex, showWordScore, showPoints, showScoreMult, popAnim, Colour}) => {
+const ScoreSidebar = ({ highScore, wordScore, clues, guessIndex, showWordScore, showPoints, showScoreMult, highScoreUpdated, popAnim, Colour}) => {
   return (
     <StyledDiv>
       <ScoreDisplay
-        score={score}
+        highScore={highScore}
         wordScore={wordScore}
         showWordScore={showWordScore}
         showPoints={showPoints}
         showScoreMult={showScoreMult}
+        highScoreUpdated={highScoreUpdated}
         popAnim={popAnim}
       />
       <ScoreCalc

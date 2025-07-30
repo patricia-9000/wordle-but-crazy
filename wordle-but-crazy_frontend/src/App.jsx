@@ -110,9 +110,11 @@ const App = () => {
   const messageTimeoutIdRef = useRef({})
   messageTimeoutIdRef.current = messageTimeoutId
 
-  const [score, setScore] = useState(0)
-  const scoreRef = useRef({})
-  scoreRef.current = score
+  const [highScore, setHighScore] = useState(0)
+  const highScoreRef = useRef({})
+  highScoreRef.current = highScore
+
+  const [highScoreUpdated, setHighScoreUpdated] = useState(false)
 
   const [wordScore, setWordScore] = useState(0)
   const wordScoreRef = useRef({})
@@ -190,26 +192,37 @@ const App = () => {
     }, 1000)
   }
 
-  //Multiply word score based on number of unused guesses and add to overall score
+  //Multiply word score based on number of unused guesses
   const finalizeScore = won => {
-    //Add to overall score if game was won
     if (won) {
+      setHighScoreUpdated(false)
       const linesLeft = 6 - guessIndexRef.current
 
       //Do multiplication if there were unused guesses
       if (linesLeft !== 0) {
-        setWordScore(wordScoreRef.current * (2 ** linesLeft))
+        const newWordScore = wordScoreRef.current * (2 ** linesLeft)
+        setWordScore(newWordScore)
         setShowScoreMult(true)
 
         setTimeout(() => {
-          setScore(scoreRef.current + wordScoreRef.current)
+          //Update high score if old high score has been beaten
+          if (newWordScore > highScoreRef.current) {
+            setHighScore(newWordScore)
+            setHighScoreUpdated(true)
+          }
+
           setShowScoreMult(false)
           setWordScore(0)
           setTimeout(() => restartGame(), 1500)
         }, 1500)
       //Don't do multiplication if all guesses used
       } else {
-        setScore(scoreRef.current + wordScoreRef.current)
+        //Update high score if old high score has been beaten
+        if (wordScoreRef.current > highScoreRef.current) {
+          setHighScore(wordScoreRef.current)
+          setHighScoreUpdated(true)
+        }
+
         setWordScore(0)
         setTimeout(() => restartGame(), 1500)
       }
@@ -385,13 +398,14 @@ const App = () => {
     <div>
       <StyledDiv>
         <ScoreSidebar 
-          score={score}
+          highScore={highScore}
           wordScore={wordScore}
           clues={clues}
           guessIndex={guessIndex}
           showWordScore={showWordScore}
           showPoints={showPoints}
           showScoreMult={showScoreMult}
+          highScoreUpdated={highScoreUpdated}
           popAnim={popAnim}
           Colour={Colour}
         />
