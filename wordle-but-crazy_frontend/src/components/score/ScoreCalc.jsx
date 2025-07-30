@@ -1,5 +1,16 @@
 import styled from 'styled-components'
 
+//Contain both tile scoring and mult scoring together
+//  overlapping by placing them within the same grid cell
+const CalcContainer = styled.div`
+  display: grid;
+`
+
+const TileScoreContainer = styled.div`
+  grid-column: 1;
+  grid-row: 1;
+`
+
 const TileScore = styled.div`
   margin: 15px auto;
 
@@ -30,8 +41,10 @@ const TileScore = styled.div`
   }
 `
 
-const ScoreMult = styled.div`
+const MultScore = styled.div`
   text-align: right;
+  grid-column: 1;
+  grid-row: 1;
 
   .multiplier {
     font-size: 30pt;
@@ -41,40 +54,51 @@ const ScoreMult = styled.div`
     margin: 0 25px;
   }
 
-  animation: ${props => props.$popAnim} 0.05s linear 1;
+  &.showMult {
+    animation: ${props => props.$popAnim} 0.05s linear 1;
+  }
+
+  &.hideMult {
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 0s 1s, opacity 1s ease-in;
+  }
 `
 
 const ScoreCalc = ({clues, guessIndex, showPoints, showScoreMult, popAnim, Colour}) => {
-  //Render the tile point additions
-  if (!showScoreMult) {
-    let scoredTiles = []
+  //Generate data for rendering scoring from letter tiles
+  let scoredTiles = []
 
-    if (guessIndex > 0) {
-      for (let i = 0; i < 5; i ++) {
-        const thisColour = clues[guessIndex - 1].colours[i]
-        
-        switch (thisColour) {
-          case 'Yellow':
-            scoredTiles.push({
-              colour: thisColour,
-              letter: clues[guessIndex - 1].word[i],
-              points: '+10'
-            })
-            break;
-          case 'Green':
-            scoredTiles.push({
-              colour: thisColour,
-              letter: clues[guessIndex - 1].word[i],
-              points: '+50'
-            })
-            break;
-        }
+  if (guessIndex > 0) {
+    for (let i = 0; i < 5; i ++) {
+      const thisColour = clues[guessIndex - 1].colours[i]
+      
+      switch (thisColour) {
+        case 'Yellow':
+          scoredTiles.push({
+            colour: thisColour,
+            letter: clues[guessIndex - 1].word[i],
+            points: '+10'
+          })
+          break;
+        case 'Green':
+          scoredTiles.push({
+            colour: thisColour,
+            letter: clues[guessIndex - 1].word[i],
+            points: '+50'
+          })
+          break;
       }
     }
+  }
 
-    return (
-      <div>
-        {scoredTiles.map((t, i) => 
+  const linesLeft = 6 - guessIndex
+
+  return (
+    <CalcContainer>
+      {/* Render scoring from letter tiles */}
+      <TileScoreContainer>
+        {showScoreMult ? <div></div> : scoredTiles.map((t, i) => 
         <TileScore
           className={showPoints ? 'showPoints' : 'hidePoints'}
           $thisColour={t.colour}
@@ -89,14 +113,10 @@ const ScoreCalc = ({clues, guessIndex, showPoints, showScoreMult, popAnim, Colou
             <b>{t.letter.toUpperCase()}</b>
           </div>
         </TileScore>)}
-      </div>
-    )
-  //Render the spare lines point multiplier
-  } else {
-    const linesLeft = 6 - guessIndex
-
-    return (
-      <ScoreMult
+      </TileScoreContainer>
+      {/* Render score multiplication from left over lines */}
+      <MultScore
+        className={showScoreMult ? 'showMult' : 'hideMult'}
         $popAnim={popAnim}
       >
         <div className='multiplier'>
@@ -105,9 +125,9 @@ const ScoreCalc = ({clues, guessIndex, showPoints, showScoreMult, popAnim, Colou
         <div className='linesLeft'>
           <b>{linesLeft} line{linesLeft === 1 ? '' : 's'} left</b>
         </div>
-      </ScoreMult>
-    )
-  }
+      </MultScore>
+    </CalcContainer>
+  )
 }
 
 export default ScoreCalc
